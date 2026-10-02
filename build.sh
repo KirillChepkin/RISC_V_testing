@@ -1,1 +1,1 @@
-riscv64-elf-gcc -o try.elf try.c
+gcc try.c -o try
