@@ -1,5 +1,5 @@
 connect.sh
-build.sh
+test.sh
 try
 .DS_STORE
 .vscode
