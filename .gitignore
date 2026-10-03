@@ -1,5 +1,6 @@
 connect.sh
 test.sh
 try
+riscv_asm
 .DS_STORE
 .vscode
