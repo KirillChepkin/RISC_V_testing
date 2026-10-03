@@ -1,5 +1,6 @@
 connect.sh
 test.sh
+copy.sh
 try
 riscv_asm
 .DS_STORE
