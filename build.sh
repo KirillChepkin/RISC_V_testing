@@ -1,4 +1,4 @@
-if ["$(uname -s)" == "Linux"]; then
+if ["$(uname -s)" = "Linux"]; then
     source ./public_config.sh
 
     gcc try.c -o try
