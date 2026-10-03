@@ -1,7 +1,10 @@
-connect.sh
+private_config.sh
 test.sh
-copy.sh
+
 try
-riscv_asm
+try.exe
+
+riscv_asm/*
+
 .DS_STORE
 .vscode
