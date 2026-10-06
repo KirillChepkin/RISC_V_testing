@@ -4,6 +4,7 @@ test.sh
 result
 try
 try.exe
+a.out
 
 riscv_asm/*.asm
 
