@@ -7,6 +7,9 @@ try.exe
 a.out
 
 riscv_asm/*.asm
+!images/compressed/.gitkeep
+!images/decompressed/.gitkeep
+!images/uncompressed/.gitkeep
 images/compressed/*
 images/decompressed/*
 images/uncompressed/*
