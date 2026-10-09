@@ -7,6 +7,9 @@ try.exe
 a.out
 
 riscv_asm/*.asm
+images/compressed/*
+images/decompressed/*
+images/uncompressed/*
 
 .DS_STORE
 .vscode
