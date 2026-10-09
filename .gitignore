@@ -1,6 +1,12 @@
 private_config.sh
 test.sh
 
+build/*
+!build/.gitkeep
+
+output/*
+!output/.gitkeep
+
 result
 try
 try.exe
