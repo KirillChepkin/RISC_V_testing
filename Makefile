@@ -30,7 +30,6 @@ build/photo_compressor: build/photo_compressor.o build/stb_image.o build/libjpge
 	g++ build/photo_compressor.o build/stb_image.o -Lbuild -ljpge -o build/photo_compressor
 
 photo: build/photo_compressor
-	mkdir -p output
 	./build/photo_compressor
 
 clean:

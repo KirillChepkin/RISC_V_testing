@@ -21,7 +21,7 @@ extern "C" {
 int main() {
     std::string filename;
 
-    std::cout << "Enter input filename (from input/): ";
+    std::cout << "Enter input filename (from images/uncompressed/): ";
     std::getline(std::cin, filename);
 
     if (filename.empty()
@@ -32,7 +32,7 @@ int main() {
         return 1;
     }
 
-    const std::string input_path = "input/" + filename;
+    const std::string input_path = "images/uncompressed/" + filename;
 
     int width = 0;
     int height = 0;
@@ -74,7 +74,7 @@ int main() {
     }
 
     const std::string output_path =
-        "output/" + base_name + "_q"
+        "images/compressed/" + base_name + "_q"
         + std::to_string(quality) + ".jpeg";
 
     jpge::params params;
