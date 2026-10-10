@@ -30,7 +30,7 @@ build/photo_compressor: build/photo_compressor.o build/stb_image.o build/libjpge
 	g++ build/photo_compressor.o build/stb_image.o -Lbuild -ljpge -o build/photo_compressor
 
 photo: build/photo_compressor
-	./build/photo_compressor
+	perf stat -e cycles ./build/photo_compressor
 
 clean:
 	rm -f build/jpge.o build/libjpge.a build/test.o build/test build/stb_image.o build/photo_compressor.o build/photo_compressor
