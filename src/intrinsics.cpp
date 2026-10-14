@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <riscv_vector.h>
 
-void *memcpy_rvv(void *restrict destination, const void *restrict source,
-    size_t n) {
+void *memcpy_rvv(void *restrict destination, const void *restrict source, size_t n) {
   unsigned char *dst = destination;
   const unsigned char *src = source;
   // copy data byte by byte
