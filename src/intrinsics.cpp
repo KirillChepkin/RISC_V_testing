@@ -23,7 +23,7 @@ int main() {
     uint32_t a[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     uint32_t b[20] = {};
     void* ret = memcpy_rvv(b, a, 10 * sizeof(uint32_t));
-    printf("return value: %x\n", b);
+    printf("return value: %x\n", ret);
     for (int i = 0; i < 10; i++) {
         printf("[%d]", b[i]);
     }
