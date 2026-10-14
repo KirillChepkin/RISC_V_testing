@@ -2,8 +2,8 @@
 #include <riscv_vector.h>
 
 void *memcpy_rvv(void* destination, const void* source, size_t n) {
-  unsigned char *dst = destination;
-  const unsigned char *src = source;
+  unsigned char *dst = (unsigned char*)destination;
+  const unsigned char *src = (unsigned char*)source;
   // copy data byte by byte
   for (size_t vl; n > 0; n -= vl, src += vl, dst += vl) {
     vl = __riscv_vsetvl_e8m8(n);
