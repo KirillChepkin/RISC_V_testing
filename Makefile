@@ -32,5 +32,12 @@ build/photo_compressor: build/photo_compressor.o build/stb_image.o build/libjpge
 photo: build/photo_compressor
 	perf stat -e cycles ./build/photo_compressor
 
+build/intrinsics_test:
+	g++ -c src/intrinsics.cpp -o build/intrinsics_test.o
+	g++ build/intrinsics_test.o -o build/intrinsics_test
+
+intrinsics: build/intrinsics_test
+	perf stat -e cycles ./build/intrinsics_test
+
 clean:
 	rm -f build/jpge.o build/libjpge.a build/test.o build/test build/stb_image.o build/photo_compressor.o build/photo_compressor
