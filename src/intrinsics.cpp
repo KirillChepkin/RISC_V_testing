@@ -14,7 +14,7 @@ void *memcpy_rvv(void* destination, const void* source, size_t n) {
     // src is incremented vl (bytes)
     // dst is incremented vl (bytes)
     // n is decremented vl
-  }
+  } 
   return destination;
 }
 
