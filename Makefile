@@ -52,7 +52,7 @@ build/intrinsics_test_vector_assembly:
 
 intrinsics_assembly: build/intrinsics_test_vector_assembly #, build/intrinsics_test_scalar_assembly
 
-intrinsics: build/intrinsics_test_vector build/intrinsics_test_scalar
+intrinsics: build/intrinsics_test_vector # build/intrinsics_test_scalar
 	perf stat -e cycles ./build/intrinsics_test_vector
 	perf stat -e cycles ./build/intrinsics_test_scalar
 
