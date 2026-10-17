@@ -40,15 +40,18 @@ build/intrinsics_test_vector:
 	g++ $(CXXFLAGS) -DVECTOR -march=rv64gcv -c src/intrinsics.cpp -o build/intrinsics_test_vector.o
 	g++ build/intrinsics_test_vector.o -o build/intrinsics_test_vector
 
-build/intrinsics_test_scalar:
-	g++ $(CXXFLAGS) -march=rv64gc -c src/intrinsics.cpp -o build/intrinsics_test_scalar.o
-	g++ build/intrinsics_test_scalar.o -o build/intrinsics_test_scalar
-
 build/intrinsics_test_vector_assembly:
 	g++ $(CXXFLAGS) -DVECTOR -march=rv64gcv -S src/intrinsics.cpp -o riscv_asm/intrinsics_for_vector.asm
 
+# commands tell the compiler to:
+# 1) run with VECTOR macro which hides all code with intrinsics from compilation.
+# 2) compile for riscv vector with -O3 flag which means to optimize generated code.
+build/intrinsics_test_scalar:
+	g++ $(CXXFLAGS) -march=rv64gcv -c src/intrinsics.cpp -o build/intrinsics_test_scalar.o
+	g++ build/intrinsics_test_scalar.o -o build/intrinsics_test_scalar
+
 build/intrinsics_test_scalar_assembly:
-	g++ $(CXXFLAGS) -march=rv64gc -S src/intrinsics.cpp -o riscv_asm/intrinsics_for_general.asm
+	g++ $(CXXFLAGS) -march=rv64gcv -S src/intrinsics.cpp -o riscv_asm/intrinsics_for_general.asm
 
 intrinsics_assembly: build/intrinsics_test_vector_assembly build/intrinsics_test_scalar_assembly
 
