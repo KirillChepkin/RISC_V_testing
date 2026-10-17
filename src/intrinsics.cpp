@@ -23,6 +23,7 @@ void *memcpy_rvv(void* destination, const void* source, size_t n) {
 }
 
 void memmul_rvv(uint32_t* a, uint32_t* b, size_t n) {
+  // multiplies all elements from arrays a and b of equal length n using riscv intrinsics.
   while (n > 0) {
     size_t vl = __riscv_vsetvl_e32m8(n);
     vuint32m8_t a_vector = __riscv_vle32_v_u32m8(a, vl);
