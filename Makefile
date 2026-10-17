@@ -1,4 +1,4 @@
-CXXFLAGS = -Wall -Wextra -I.
+CXXFLAGS = -Wall -Wextra -I -O3.
 
 .PHONY: all run clean
 
