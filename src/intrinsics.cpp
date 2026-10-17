@@ -47,8 +47,8 @@ int main() {
 
   // void* ret = memcpy_rvv(b, a, N * sizeof(uint32_t));
   memmul_rvv(a, b, N);
-  for (int i = 0; i < N; i++) {
-    printf("[%d]", b[i]);
-  }
-  printf("\n");
+  // for (int i = 0; i < N; i++) {
+  //   printf("[%d]", b[i]);
+  // }
+  // printf("\n");
 }
