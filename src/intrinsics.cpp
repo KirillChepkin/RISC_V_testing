@@ -24,7 +24,7 @@ void *memcpy_rvv(void* destination, const void* source, size_t n) {
 
 void memmul_rvv(uint32_t* a, uint32_t* b, size_t n) {
   while (n > 0) {
-    size_t vl = __riscv_vsetvl_e32m8n(n);
+    size_t vl = __riscv_vsetvl_e32m8(n);
     vuint32m8_t a_vector = __riscv_vle32_v_u32m8(a, vl);
     vuint32m8_t b_vector = __riscv_vle32_v_u32m8(b, vl);
     b_vector = __riscv_vmul_vv_u32m8(a_vector, b_vector, vl);
