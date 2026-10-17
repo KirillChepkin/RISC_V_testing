@@ -39,9 +39,9 @@ int main() {
   uint32_t a[N] = {};
   uint32_t b[N] = {};
 
-  for (unsigned int i = 0; i < N; i++) {
-    a[i] = 1;
-    b[i] = i;
+  for (uint32_t i = 0; i < N; i++) {
+    a[i] = i;
+    b[i] = 2;
   }
 
   // void* ret = memcpy_rvv(b, a, N * sizeof(uint32_t));
