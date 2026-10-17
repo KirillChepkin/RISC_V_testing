@@ -36,14 +36,18 @@ void memmul_rvv(uint32_t* a, uint32_t* b, size_t n) {
 }
 
 int main() {
-    uint32_t a[N] = {};
-    uint32_t b[N] = {};
-    memset(b, 2, N * sizeof(uint32_t));
-    memset(a, 1, N * sizeof(uint32_t));
-    // void* ret = memcpy_rvv(b, a, N * sizeof(uint32_t));
-    memmul_rvv(a, b, N);
-    for (int i = 0; i < N; i++) {
-        printf("[%d]", b[i]);
-    }
-    printf("\n");
+  uint32_t a[N] = {};
+  uint32_t b[N] = {};
+
+  for (unsigned int i = 0; i < N; i++) {
+    a[i] = 1;
+    b[i] = i;
+  }
+
+  // void* ret = memcpy_rvv(b, a, N * sizeof(uint32_t));
+  memmul_rvv(a, b, N);
+  for (int i = 0; i < N; i++) {
+    printf("[%d]", b[i]);
+  }
+  printf("\n");
 }
