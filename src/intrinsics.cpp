@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <riscv_vector.h>
 
 #define N 1000
 
 #ifdef VECTOR
+
+#include <riscv_vector.h>
 
 void *memcpy_rvv(void* destination, const void* source, size_t n) {
   unsigned char *dst = (unsigned char*)destination;
