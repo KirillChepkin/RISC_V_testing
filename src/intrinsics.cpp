@@ -44,7 +44,6 @@ int main() {
     memset(b, 2, N);
     // void* ret = memcpy_rvv(b, a, N * sizeof(uint32_t));
     memmul_rvv(a, b, N);
-    printf("return value: %x\n", ret);
     for (int i = 0; i < N; i++) {
         printf("[%d]", b[i]);
     }
