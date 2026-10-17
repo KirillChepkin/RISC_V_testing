@@ -37,24 +37,24 @@ photo: build/photo_compressor
 
 
 build/intrinsics_test_vector:
-	g++ $(CXXFLAGS) -march=rv64gcv -c src/intrinsics.cpp -o build/intrinsics_test_vector.o
+	g++ $(CXXFLAGS) -DVECTOR -march=rv64gcv -c src/intrinsics.cpp -o build/intrinsics_test_vector.o
 	g++ build/intrinsics_test_vector.o -o build/intrinsics_test_vector
 
-# build/intrinsics_test_scalar:
-# 	g++ $(CXXFLAGS) -march=rv64gc -c src/intrinsics.cpp -o build/intrinsics_test_scalar.o
-# 	g++ build/intrinsics_test_scalar.o -o build/intrinsics_test_scalar
+build/intrinsics_test_scalar:
+	g++ $(CXXFLAGS) -march=rv64gc -c src/intrinsics.cpp -o build/intrinsics_test_scalar.o
+	g++ build/intrinsics_test_scalar.o -o build/intrinsics_test_scalar
 
 build/intrinsics_test_vector_assembly:
-	g++ $(CXXFLAGS) -march=rv64gcv -S src/intrinsics.cpp -o riscv_asm/intrinsics_for_vector.asm
+	g++ $(CXXFLAGS) -DVECTOR -march=rv64gcv -S src/intrinsics.cpp -o riscv_asm/intrinsics_for_vector.asm
 
-# build/intrinsics_test_scalar_assembly:
-# 	g++ $(CXXFLAGS) -march=rv64gc -S src/intrinsics.cpp -o riscv_asm/intrinsics_for_general.asm
+build/intrinsics_test_scalar_assembly:
+	g++ $(CXXFLAGS) -march=rv64gc -S src/intrinsics.cpp -o riscv_asm/intrinsics_for_general.asm
 
-intrinsics_assembly: build/intrinsics_test_vector_assembly #, build/intrinsics_test_scalar_assembly
+intrinsics_assembly: build/intrinsics_test_vector_assembly build/intrinsics_test_scalar_assembly
 
-intrinsics: build/intrinsics_test_vector # build/intrinsics_test_scalar
+intrinsics: build/intrinsics_test_vector build/intrinsics_test_scalar
 	perf stat -e cycles ./build/intrinsics_test_vector
-# 	perf stat -e cycles ./build/intrinsics_test_scalar
+	perf stat -e cycles ./build/intrinsics_test_scalar
 
 
 

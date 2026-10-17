@@ -5,6 +5,8 @@
 
 #define N 1000
 
+#ifdef VECTOR
+
 void *memcpy_rvv(void* destination, const void* source, size_t n) {
   unsigned char *dst = (unsigned char*)destination;
   const unsigned char *src = (unsigned char*)source;
@@ -22,7 +24,7 @@ void *memcpy_rvv(void* destination, const void* source, size_t n) {
   return destination;
 }
 
-void memmul_rvv(uint32_t* a, uint32_t* b, size_t n) {
+void memmul(uint32_t* a, uint32_t* b, size_t n) {
   // multiplies all elements from arrays a and b of equal length n using riscv intrinsics.
   while (n > 0) {
     size_t vl = __riscv_vsetvl_e32m8(n);
@@ -36,7 +38,24 @@ void memmul_rvv(uint32_t* a, uint32_t* b, size_t n) {
   }
 }
 
+#else
+
+void memmul(uint32_t* a, uint32_t* b, size_t n) {
+  // multiplies all elements from arrays a and b of equal length n.
+  for (int i = 0; i < n; i++) {
+    b[i] = a[i] * b[i];
+  }
+}
+
+#endif
+
 int main() {
+  #ifdef VECTOR
+    printf("Compiling for riscv vector.");
+  #else 
+    printf("Compiling for general riscv.");
+  #endif
+
   uint32_t a[N] = {};
   uint32_t b[N] = {};
 
@@ -45,10 +64,9 @@ int main() {
     b[i] = 2;
   }
 
-  // void* ret = memcpy_rvv(b, a, N * sizeof(uint32_t));
-  memmul_rvv(a, b, N);
-  // for (int i = 0; i < N; i++) {
-  //   printf("[%d]", b[i]);
-  // }
-  // printf("\n");
+  memmul(a, b, N);
+  for (int i = 0; i < N; i++) {
+    printf("[%d]", b[i]);
+  }
+  printf("\n");
 }
