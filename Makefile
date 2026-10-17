@@ -33,9 +33,11 @@ photo: build/photo_compressor
 	perf stat -e cycles ./build/photo_compressor
 
 build/intrinsics_test:
-	g++ -march=rv64gcv -S src/intrinsics.cpp -o riscv_asm/intrinsics.asm
 	g++ -march=rv64gcv -c src/intrinsics.cpp -o build/intrinsics_test.o
 	g++ build/intrinsics_test.o -o build/intrinsics_test
+
+build/intrinsics_test_assembly:
+	g++ -march=rv64gcv -S src/intrinsics.cpp -o riscv_asm/intrinsics.asm
 
 intrinsics: build/intrinsics_test
 	perf stat -e cycles ./build/intrinsics_test
