@@ -44,7 +44,7 @@ void memmul(uint32_t* a, uint32_t* b, size_t n) {
 
 void memmul(uint32_t* a, uint32_t* b, size_t n) {
   // multiplies all elements from arrays a and b of equal length n.
-  for (int i = 0; i < n; i++) {
+  for (size_t i = 0; i < n; i++) {
     b[i] = a[i] * b[i];
   }
 }

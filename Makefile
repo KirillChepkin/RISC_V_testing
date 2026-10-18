@@ -43,8 +43,8 @@ build/intrinsics_test_vector:
 build/intrinsics_test_vector_assembly:
 	g++ $(CXXFLAGS) -DVECTOR -march=rv64gcv -S src/intrinsics.cpp -o riscv_asm/intrinsics_for_vector.asm
 
-# commands tell the compiler to:
-# 1) run with VECTOR macro which hides all code with intrinsics from compilation.
+# Commands from four of the following rules tell the compiler to:
+# 1) run without the VECTOR macro thus hiding all code with intrinsics from compiler.
 # 2) compile for riscv vector with -O3 flag which means to optimize generated code.
 build/intrinsics_test_scalar:
 	g++ $(CXXFLAGS) -march=rv64gcv -c src/intrinsics.cpp -o build/intrinsics_test_scalar.o
