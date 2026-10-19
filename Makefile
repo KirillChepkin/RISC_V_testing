@@ -10,6 +10,23 @@ build/libjpge.a: build/jpge.o
 
 library: build/libjpge.a
 
+build/jpgd.o: jpg/jpgd.cpp jpg/jpgd.h jpg/jpgd_scripts.h
+	g++ $(CXXFLAGS) -c jpg/jpgd.cpp -o build/jpgd.o
+
+build/icdt.o: jpg/icdt.cpp jpg/jpgd.h jpg/jpgd_scripts.h
+	g++ $(CXXFLAGS) -c jpg/icdt.cpp -o build/icdt.o
+
+build/color_converter.o: jpg/color_converter.cpp jpg/jpgd.h jpg/jpgd_scripts.h
+	g++ $(CXXFLAGS) -c jpg/color_converter.cpp -o build/color_converter.o
+
+build/haffman_decoder.o: jpg/haffman_decoder.cpp jpg/jpgd.h jpg/jpgd_scripts.h
+	g++ $(CXXFLAGS) -c jpg/haffman_decoder.cpp -o build/haffman_decoder.o
+
+build/libjpgd.a: build/jpgd.o build/icdt.o build/color_converter.o build/haffman_decoder.o
+	ar rcs build/libjpgd.a build/jpgd.o build/icdt.o build/color_converter.o build/haffman_decoder.o
+
+dlibrary: build/libjpgd.a
+
 build/test.o: src/test.cpp jpg/jpge.h
 	g++ $(CXXFLAGS) -c src/test.cpp -o build/test.o
 
@@ -32,6 +49,15 @@ build/photo_compressor: build/photo_compressor.o build/stb_image.o build/libjpge
 photo: build/photo_compressor
 	perf stat -e cycles ./build/photo_compressor
 
+build/photo_decompressor.o: src/photo_decompressor.cpp jpg/jpgd.h
+	g++ $(CXXFLAGS) -c src/photo_decompressor.cpp -o build/photo_decompressor.o
+
+build/photo_decompressor: build/photo_decompressor.o build/stb_image.o build/libjpgd.a
+	g++ build/photo_decompressor.o build/stb_image.o -Lbuild -ljpgd -o build/photo_decompressor
+
+decomp_photo: build/photo_decompressor
+	perf stat -e cycles ./build/photo_decompressor
+
 build/intrinsics_test:
 	g++ -march=rv64gcv -S src/intrinsics.cpp -o riscv_asm/intrinsics.asm
 	g++ -march=rv64gcv -c src/intrinsics.cpp -o build/intrinsics_test.o
@@ -42,3 +68,4 @@ intrinsics: build/intrinsics_test
 
 clean:
 	rm -f build/jpge.o build/libjpge.a build/test.o build/test build/stb_image.o build/photo_compressor.o build/photo_compressor
+	rm -f build/jpgd.o build/icdt.o build/color_converter.o build/haffman_decoder.o build/libjpgd.a build/photo_decompressor.o build/photo_decompressor
