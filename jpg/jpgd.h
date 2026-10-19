@@ -277,7 +277,7 @@ namespace jpgd
     void transform_mcu(int mcu_row);
     void transform_mcu_expand(int mcu_row);
     coeff_buf* coeff_buf_open(int block_num_x, int block_num_y, int block_len_x, int block_len_y);
-    inline jpgd_block_t *coeff_buf_getp(coeff_buf *cb, int block_x, int block_y);
+    jpgd_block_t *coeff_buf_getp(coeff_buf *cb, int block_x, int block_y);
     void load_next_row();
     void decode_next_row();
     void make_huff_table(int index, huff_tables *pH);
@@ -304,9 +304,9 @@ namespace jpgd
     inline void stuff_char(uint8 q);
     inline uint8 get_octet();
     inline uint get_bits(int num_bits);
-    inline uint get_bits_no_markers(int numbits);
-    inline int huff_decode(huff_tables *pH);
-    inline int huff_decode(huff_tables *pH, int& extrabits);
+    uint get_bits_no_markers(int numbits);
+    int huff_decode(huff_tables *pH);
+    int huff_decode(huff_tables *pH, int& extrabits);
     static inline uint8 clamp(int i);
     static void decode_block_dc_first(jpeg_decoder *pD, int component_id, int block_x, int block_y);
     static void decode_block_dc_refine(jpeg_decoder *pD, int component_id, int block_x, int block_y);
