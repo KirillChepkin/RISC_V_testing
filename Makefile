@@ -1,4 +1,4 @@
-CXXFLAGS = -Wall -Wextra -I -O3 -march=rv64gcv.
+CXXFLAGS = -Wall -Wextra -I -O3 -march=rv64gcv -std=c++18.
 
 .PHONY: all run clean
 
