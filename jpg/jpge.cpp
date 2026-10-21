@@ -9,6 +9,7 @@
 //                       Code review revealed method load_block_16_8_8() (used for the non-default H2V1 sampling mode to downsample chroma) somehow didn't get the rounding factor fix from v1.02.
 
 #include "jpge.h"
+#include "jpge_internal_modules.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -60,342 +61,60 @@ template <class T> inline void clear_obj(T &obj) { memset(&obj, 0, sizeof(obj));
 const int YR = 19595, YG = 38470, YB = 7471, CB_R = -11059, CB_G = -21709, CB_B = 32768, CR_R = 32768, CR_G = -27439, CR_B = -5329;
 static inline uint8 clamp(int i) { if (static_cast<uint>(i) > 255U) { if (i < 0) i = 0; else if (i > 255) i = 255; } return static_cast<uint8>(i); }
 
-static void RGB_to_YCC(uint8* pDst, const uint8 *pSrc, int num_pixels)
-{
-  for ( ; num_pixels; pDst += 3, pSrc += 3, num_pixels--)
-  {
-    const int r = pSrc[0], g = pSrc[1], b = pSrc[2];
-    pDst[0] = static_cast<uint8>((r * YR + g * YG + b * YB + 32768) >> 16);
-    pDst[1] = clamp(128 + ((r * CB_R + g * CB_G + b * CB_B + 32768) >> 16));
-    pDst[2] = clamp(128 + ((r * CR_R + g * CR_G + b * CR_B + 32768) >> 16));
-  }
-}
 
-static void RGB_to_Y(uint8* pDst, const uint8 *pSrc, int num_pixels)
-{
-  for ( ; num_pixels; pDst++, pSrc += 3, num_pixels--)
-    pDst[0] = static_cast<uint8>((pSrc[0] * YR + pSrc[1] * YG + pSrc[2] * YB + 32768) >> 16);
-}
 
-static void RGBA_to_YCC(uint8* pDst, const uint8 *pSrc, int num_pixels)
-{
-  for ( ; num_pixels; pDst += 3, pSrc += 4, num_pixels--)
-  {
-    const int r = pSrc[0], g = pSrc[1], b = pSrc[2];
-    pDst[0] = static_cast<uint8>((r * YR + g * YG + b * YB + 32768) >> 16);
-    pDst[1] = clamp(128 + ((r * CB_R + g * CB_G + b * CB_B + 32768) >> 16));
-    pDst[2] = clamp(128 + ((r * CR_R + g * CR_G + b * CR_B + 32768) >> 16));
-  }
-}
 
-static void RGBA_to_Y(uint8* pDst, const uint8 *pSrc, int num_pixels)
-{
-  for ( ; num_pixels; pDst++, pSrc += 4, num_pixels--)
-    pDst[0] = static_cast<uint8>((pSrc[0] * YR + pSrc[1] * YG + pSrc[2] * YB + 32768) >> 16);
-}
 
-static void Y_to_YCC(uint8* pDst, const uint8* pSrc, int num_pixels)
-{
-  for( ; num_pixels; pDst += 3, pSrc++, num_pixels--) { pDst[0] = pSrc[0]; pDst[1] = 128; pDst[2] = 128; }
-}
 
-// Forward DCT - DCT derived from jfdctint.
-enum { CONST_BITS = 13, ROW_BITS = 2 };
-#define DCT_DESCALE(x, n) (((x) + (((int32)1) << ((n) - 1))) >> (n))
-#define DCT_MUL(var, c) (static_cast<int16>(var) * static_cast<int32>(c))
-#define DCT1D(s0, s1, s2, s3, s4, s5, s6, s7) \
-  int32 t0 = s0 + s7, t7 = s0 - s7, t1 = s1 + s6, t6 = s1 - s6, t2 = s2 + s5, t5 = s2 - s5, t3 = s3 + s4, t4 = s3 - s4; \
-  int32 t10 = t0 + t3, t13 = t0 - t3, t11 = t1 + t2, t12 = t1 - t2; \
-  int32 u1 = DCT_MUL(t12 + t13, 4433); \
-  s2 = u1 + DCT_MUL(t13, 6270); \
-  s6 = u1 + DCT_MUL(t12, -15137); \
-  u1 = t4 + t7; \
-  int32 u2 = t5 + t6, u3 = t4 + t6, u4 = t5 + t7; \
-  int32 z5 = DCT_MUL(u3 + u4, 9633); \
-  t4 = DCT_MUL(t4, 2446); t5 = DCT_MUL(t5, 16819); \
-  t6 = DCT_MUL(t6, 25172); t7 = DCT_MUL(t7, 12299); \
-  u1 = DCT_MUL(u1, -7373); u2 = DCT_MUL(u2, -20995); \
-  u3 = DCT_MUL(u3, -16069); u4 = DCT_MUL(u4, -3196); \
-  u3 += z5; u4 += z5; \
-  s0 = t10 + t11; s1 = t7 + u1 + u4; s3 = t6 + u2 + u3; s4 = t10 - t11; s5 = t5 + u2 + u4; s7 = t4 + u1 + u3;
 
-static void DCT2D(int32 *p)
-{
-  int32 c, *q = p;
-  for (c = 7; c >= 0; c--, q += 8)
-  {
-    int32 s0 = q[0], s1 = q[1], s2 = q[2], s3 = q[3], s4 = q[4], s5 = q[5], s6 = q[6], s7 = q[7];
-    DCT1D(s0, s1, s2, s3, s4, s5, s6, s7);
-    q[0] = s0 << ROW_BITS; q[1] = DCT_DESCALE(s1, CONST_BITS-ROW_BITS); q[2] = DCT_DESCALE(s2, CONST_BITS-ROW_BITS); q[3] = DCT_DESCALE(s3, CONST_BITS-ROW_BITS);
-    q[4] = s4 << ROW_BITS; q[5] = DCT_DESCALE(s5, CONST_BITS-ROW_BITS); q[6] = DCT_DESCALE(s6, CONST_BITS-ROW_BITS); q[7] = DCT_DESCALE(s7, CONST_BITS-ROW_BITS);
-  }
-  for (q = p, c = 7; c >= 0; c--, q++)
-  {
-    int32 s0 = q[0*8], s1 = q[1*8], s2 = q[2*8], s3 = q[3*8], s4 = q[4*8], s5 = q[5*8], s6 = q[6*8], s7 = q[7*8];
-    DCT1D(s0, s1, s2, s3, s4, s5, s6, s7);
-    q[0*8] = DCT_DESCALE(s0, ROW_BITS+3); q[1*8] = DCT_DESCALE(s1, CONST_BITS+ROW_BITS+3); q[2*8] = DCT_DESCALE(s2, CONST_BITS+ROW_BITS+3); q[3*8] = DCT_DESCALE(s3, CONST_BITS+ROW_BITS+3);
-    q[4*8] = DCT_DESCALE(s4, ROW_BITS+3); q[5*8] = DCT_DESCALE(s5, CONST_BITS+ROW_BITS+3); q[6*8] = DCT_DESCALE(s6, CONST_BITS+ROW_BITS+3); q[7*8] = DCT_DESCALE(s7, CONST_BITS+ROW_BITS+3);
-  }
-}
+
+
+
 
 struct sym_freq { uint m_key, m_sym_index; };
 
 // Radix sorts sym_freq[] array by 32-bit key m_key. Returns ptr to sorted values.
-static inline sym_freq* radix_sort_syms(uint num_syms, sym_freq* pSyms0, sym_freq* pSyms1)
-{
-  const uint cMaxPasses = 4;
-  uint32 hist[256 * cMaxPasses]; clear_obj(hist);
-  for (uint i = 0; i < num_syms; i++) { uint freq = pSyms0[i].m_key; hist[freq & 0xFF]++; hist[256 + ((freq >> 8) & 0xFF)]++; hist[256*2 + ((freq >> 16) & 0xFF)]++; hist[256*3 + ((freq >> 24) & 0xFF)]++; }
-  sym_freq* pCur_syms = pSyms0, *pNew_syms = pSyms1;
-  uint total_passes = cMaxPasses; while ((total_passes > 1) && (num_syms == hist[(total_passes - 1) * 256])) total_passes--;
-  for (uint pass_shift = 0, pass = 0; pass < total_passes; pass++, pass_shift += 8)
-  {
-    const uint32* pHist = &hist[pass << 8];
-    uint offsets[256], cur_ofs = 0;
-    for (uint i = 0; i < 256; i++) { offsets[i] = cur_ofs; cur_ofs += pHist[i]; }
-    for (uint i = 0; i < num_syms; i++)
-      pNew_syms[offsets[(pCur_syms[i].m_key >> pass_shift) & 0xFF]++] = pCur_syms[i];
-    sym_freq* t = pCur_syms; pCur_syms = pNew_syms; pNew_syms = t;
-  }
-  return pCur_syms;
-}
+
 
 // calculate_minimum_redundancy() originally written by: Alistair Moffat, alistair@cs.mu.oz.au, Jyrki Katajainen, jyrki@diku.dk, November 1996.
-static void calculate_minimum_redundancy(sym_freq *A, int n)
-{
-  int root, leaf, next, avbl, used, dpth;
-  if (n==0) return; else if (n==1) { A[0].m_key = 1; return; }
-  A[0].m_key += A[1].m_key; root = 0; leaf = 2;
-  for (next=1; next < n-1; next++)
-  {
-    if (leaf>=n || A[root].m_key<A[leaf].m_key) { A[next].m_key = A[root].m_key; A[root++].m_key = next; } else A[next].m_key = A[leaf++].m_key;
-    if (leaf>=n || (root<next && A[root].m_key<A[leaf].m_key)) { A[next].m_key += A[root].m_key; A[root++].m_key = next; } else A[next].m_key += A[leaf++].m_key;
-  }
-  A[n-2].m_key = 0;
-  for (next=n-3; next>=0; next--) A[next].m_key = A[A[next].m_key].m_key+1;
-  avbl = 1; used = dpth = 0; root = n-2; next = n-1;
-  while (avbl>0)
-  {
-    while (root>=0 && (int)A[root].m_key==dpth) { used++; root--; }
-    while (avbl>used) { A[next--].m_key = dpth; avbl--; }
-    avbl = 2*used; dpth++; used = 0;
-  }
-}
+
 
 // Limits canonical Huffman code table's max code size to max_code_size.
-static void huffman_enforce_max_code_size(int *pNum_codes, int code_list_len, int max_code_size)
-{
-  if (code_list_len <= 1) return;
 
-  for (int i = max_code_size + 1; i <= MAX_HUFF_CODESIZE; i++) pNum_codes[max_code_size] += pNum_codes[i];
-
-  uint32 total = 0;
-  for (int i = max_code_size; i > 0; i--)
-    total += (((uint32)pNum_codes[i]) << (max_code_size - i));
-
-  while (total != (1UL << max_code_size))
-  {
-    pNum_codes[max_code_size]--;
-    for (int i = max_code_size - 1; i > 0; i--)
-    {
-      if (pNum_codes[i]) { pNum_codes[i]--; pNum_codes[i + 1] += 2; break; }
-    }
-    total--;
-  }
-}
 
 // Generates an optimized offman table.
-void jpeg_encoder::optimize_huffman_table(int table_num, int table_len)
-{
-  sym_freq syms0[MAX_HUFF_SYMBOLS], syms1[MAX_HUFF_SYMBOLS];
-  syms0[0].m_key = 1; syms0[0].m_sym_index = 0;  // dummy symbol, assures that no valid code contains all 1's
-  int num_used_syms = 1;
-  const uint32 *pSym_count = &m_huff_count[table_num][0];
-  for (int i = 0; i < table_len; i++)
-    if (pSym_count[i]) { syms0[num_used_syms].m_key = pSym_count[i]; syms0[num_used_syms++].m_sym_index = i + 1; }
-  sym_freq* pSyms = radix_sort_syms(num_used_syms, syms0, syms1);
-  calculate_minimum_redundancy(pSyms, num_used_syms);
 
-  // Count the # of symbols of each code size.
-  int num_codes[1 + MAX_HUFF_CODESIZE]; clear_obj(num_codes);
-  for (int i = 0; i < num_used_syms; i++)
-    num_codes[pSyms[i].m_key]++;
-
-  const uint JPGE_CODE_SIZE_LIMIT = 16; // the maximum possible size of a JPEG Huffman code (valid range is [9,16] - 9 vs. 8 because of the dummy symbol)
-  huffman_enforce_max_code_size(num_codes, num_used_syms, JPGE_CODE_SIZE_LIMIT);
-
-  // Compute m_huff_bits array, which contains the # of symbols per code size.
-  clear_obj(m_huff_bits[table_num]);
-  for (int i = 1; i <= (int)JPGE_CODE_SIZE_LIMIT; i++)
-    m_huff_bits[table_num][i] = static_cast<uint8>(num_codes[i]);
-
-  // Remove the dummy symbol added above, which must be in largest bucket.
-  for (int i = JPGE_CODE_SIZE_LIMIT; i >= 1; i--)
-  {
-    if (m_huff_bits[table_num][i]) { m_huff_bits[table_num][i]--; break; }
-  }
-
-  // Compute the m_huff_val array, which contains the symbol indices sorted by code size (smallest to largest).
-  for (int i = num_used_syms - 1; i >= 1; i--)
-    m_huff_val[table_num][num_used_syms - 1 - i] = static_cast<uint8>(pSyms[i].m_sym_index - 1);
-}
 
 // JPEG marker generation.
-void jpeg_encoder::emit_byte(uint8 i)
-{
-  m_all_stream_writes_succeeded = m_all_stream_writes_succeeded && m_pStream->put_obj(i);
-}
 
-void jpeg_encoder::emit_word(uint i)
-{
-  emit_byte(uint8(i >> 8)); emit_byte(uint8(i & 0xFF));
-}
 
-void jpeg_encoder::emit_marker(int marker)
-{
-  emit_byte(uint8(0xFF)); emit_byte(uint8(marker));
-}
+
+
+
 
 // Emit JFIF marker
-void jpeg_encoder::emit_jfif_app0()
-{
-  emit_marker(M_APP0);
-  emit_word(2 + 4 + 1 + 2 + 1 + 2 + 2 + 1 + 1);
-  emit_byte(0x4A); emit_byte(0x46); emit_byte(0x49); emit_byte(0x46); /* Identifier: ASCII "JFIF" */
-  emit_byte(0);
-  emit_byte(1);      /* Major version */
-  emit_byte(1);      /* Minor version */
-  emit_byte(0);      /* Density unit */
-  emit_word(1);
-  emit_word(1);
-  emit_byte(0);      /* No thumbnail image */
-  emit_byte(0);
-}
+
 
 // Emit quantization tables
-void jpeg_encoder::emit_dqt()
-{
-  for (int i = 0; i < ((m_num_components == 3) ? 2 : 1); i++)
-  {
-    emit_marker(M_DQT);
-    emit_word(64 + 1 + 2);
-    emit_byte(static_cast<uint8>(i));
-    for (int j = 0; j < 64; j++)
-      emit_byte(static_cast<uint8>(m_quantization_tables[i][j]));
-  }
-}
+
 
 // Emit start of frame marker
-void jpeg_encoder::emit_sof()
-{
-  emit_marker(M_SOF0);                           /* baseline */
-  emit_word(3 * m_num_components + 2 + 5 + 1);
-  emit_byte(8);                                  /* precision */
-  emit_word(m_image_y);
-  emit_word(m_image_x);
-  emit_byte(m_num_components);
-  for (int i = 0; i < m_num_components; i++)
-  {
-    emit_byte(static_cast<uint8>(i + 1));                                   /* component ID     */
-    emit_byte((m_comp_h_samp[i] << 4) + m_comp_v_samp[i]);  /* h and v sampling */
-    emit_byte(i > 0);                                   /* quant. table num */
-  }
-}
+
 
 // Emit Huffman table.
-void jpeg_encoder::emit_dht(uint8 *bits, uint8 *val, int index, bool ac_flag)
-{
-  emit_marker(M_DHT);
 
-  int length = 0;
-  for (int i = 1; i <= 16; i++)
-    length += bits[i];
-
-  emit_word(length + 2 + 1 + 16);
-  emit_byte(static_cast<uint8>(index + (ac_flag << 4)));
-
-  for (int i = 1; i <= 16; i++)
-    emit_byte(bits[i]);
-
-  for (int i = 0; i < length; i++)
-    emit_byte(val[i]);
-}
 
 // Emit all Huffman tables.
-void jpeg_encoder::emit_dhts()
-{
-  emit_dht(m_huff_bits[0+0], m_huff_val[0+0], 0, false);
-  emit_dht(m_huff_bits[2+0], m_huff_val[2+0], 0, true);
-  if (m_num_components == 3)
-  {
-    emit_dht(m_huff_bits[0+1], m_huff_val[0+1], 1, false);
-    emit_dht(m_huff_bits[2+1], m_huff_val[2+1], 1, true);
-  }
-}
+
 
 // emit start of scan
-void jpeg_encoder::emit_sos()
-{
-  emit_marker(M_SOS);
-  emit_word(2 * m_num_components + 2 + 1 + 3);
-  emit_byte(m_num_components);
-  for (int i = 0; i < m_num_components; i++)
-  {
-    emit_byte(static_cast<uint8>(i + 1));
-    if (i == 0)
-      emit_byte((0 << 4) + 0);
-    else
-      emit_byte((1 << 4) + 1);
-  }
-  emit_byte(0);     /* spectral selection */
-  emit_byte(63);
-  emit_byte(0);
-}
+
 
 // Emit all markers at beginning of image file.
-void jpeg_encoder::emit_markers()
-{
-  emit_marker(M_SOI);
-  emit_jfif_app0();
-  emit_dqt();
-  emit_sof();
-  emit_dhts();
-  emit_sos();
-}
+
 
 // Compute the actual canonical Huffman codes/code sizes given the JPEG huff bits and val arrays.
-void jpeg_encoder::compute_huffman_table(uint *codes, uint8 *code_sizes, uint8 *bits, uint8 *val)
-{
-  int i, l, last_p, si;
-  uint8 huff_size[257];
-  uint huff_code[257];
-  uint code;
 
-  int p = 0;
-  for (l = 1; l <= 16; l++)
-    for (i = 1; i <= bits[l]; i++)
-      huff_size[p++] = (char)l;
-
-  huff_size[p] = 0; last_p = p; // write sentinel
-
-  code = 0; si = huff_size[0]; p = 0;
-
-  while (huff_size[p])
-  {
-    while (huff_size[p] == si)
-      huff_code[p++] = code++;
-    code <<= 1;
-    si++;
-  }
-
-  memset(codes, 0, sizeof(codes[0])*256);
-  memset(code_sizes, 0, sizeof(code_sizes[0])*256);
-  for (p = 0; p < last_p; p++)
-  {
-    codes[val[p]]      = huff_code[p];
-    code_sizes[val[p]] = huff_size[p];
-  }
-}
 
 // Quantization table generation.
 void jpeg_encoder::compute_quant_table(int32 *pDst, int16 *pSrc)
@@ -593,27 +312,9 @@ void jpeg_encoder::load_quantized_coefficients(int component_num)
   }
 }
 
-void jpeg_encoder::flush_output_buffer()
-{
-  if (m_out_buf_left != JPGE_OUT_BUF_SIZE)
-    m_all_stream_writes_succeeded = m_all_stream_writes_succeeded && m_pStream->put_buf(m_out_buf, JPGE_OUT_BUF_SIZE - m_out_buf_left);
-  m_pOut_buf = m_out_buf;
-  m_out_buf_left = JPGE_OUT_BUF_SIZE;
-}
 
-void jpeg_encoder::put_bits(uint bits, uint len)
-{
-  m_bit_buffer |= ((uint32)bits << (24 - (m_bits_in += len)));
-  while (m_bits_in >= 8)
-  {
-    uint8 c;
-    #define JPGE_PUT_BYTE(c) { *m_pOut_buf++ = (c); if (--m_out_buf_left == 0) flush_output_buffer(); }
-    JPGE_PUT_BYTE(c = (uint8)((m_bit_buffer >> 16) & 0xFF));
-    if (c == 0xFF) JPGE_PUT_BYTE(0);
-    m_bit_buffer <<= 8;
-    m_bits_in -= 8;
-  }
-}
+
+
 
 void jpeg_encoder::code_coefficients_pass_one(int component_num)
 {
@@ -773,14 +474,7 @@ bool jpeg_encoder::terminate_pass_one()
   return second_pass_init();
 }
 
-bool jpeg_encoder::terminate_pass_two()
-{
-  put_bits(0x7F, 7);
-  flush_output_buffer();
-  emit_marker(M_EOI);
-  m_pass_num++; // purposely bump up m_pass_num, for debugging
-  return true;
-}
+
 
 bool jpeg_encoder::process_end_of_image()
 {
