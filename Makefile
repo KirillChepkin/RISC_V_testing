@@ -2,11 +2,23 @@ CXXFLAGS = -Wall -Wextra -I.
 
 .PHONY: all run clean
 
-build/jpge.o: jpg/jpge.cpp jpg/jpge.h
+build/jpge.o: jpg/jpge.cpp jpg/jpge.h jpg/jpge_internal_modules.h
 	g++ $(CXXFLAGS) -c jpg/jpge.cpp -o build/jpge.o
 
-build/libjpge.a: build/jpge.o
-	ar rcs build/libjpge.a build/jpge.o
+build/jpge_color_transform.o: jpg/jpge_color_transform.cpp jpg/jpge_color_transform.h jpg/jpge_internal_modules.h
+	g++ $(CXXFLAGS) -c jpg/jpge_color_transform.cpp -o build/jpge_color_transform.o
+
+build/jpge_forward_dct.o: jpg/jpge_forward_dct.cpp jpg/jpge_forward_dct.h jpg/jpge_internal_modules.h
+	g++ $(CXXFLAGS) -c jpg/jpge_forward_dct.cpp -o build/jpge_forward_dct.o
+
+build/jpge_huffman_tables.o: jpg/jpge_huffman_tables.cpp jpg/jpge_huffman_tables.h
+	g++ $(CXXFLAGS) -c jpg/jpge_huffman_tables.cpp -o build/jpge_huffman_tables.o
+
+build/jpge_marker_writer.o: jpg/jpge_marker_writer.cpp jpg/jpge_marker_writer.h
+	g++ $(CXXFLAGS) -c jpg/jpge_marker_writer.cpp -o build/jpge_marker_writer.o
+
+build/libjpge.a: build/jpge.o build/jpge_color_transform.o build/jpge_forward_dct.o build/jpge_huffman_tables.o build/jpge_marker_writer.o
+	ar rcs build/libjpge.a build/jpge.o build/jpge_color_transform.o build/jpge_forward_dct.o build/jpge_huffman_tables.o build/jpge_marker_writer.o
 
 library: build/libjpge.a
 
@@ -41,4 +53,4 @@ intrinsics: build/intrinsics_test
 	perf stat -e cycles ./build/intrinsics_test
 
 clean:
-	rm -f build/jpge.o build/libjpge.a build/test.o build/test build/stb_image.o build/photo_compressor.o build/photo_compressor
+	rm -f build/jpge.o build/jpge_color_transform.o build/jpge_forward_dct.o build/jpge_huffman_tables.o build/jpge_marker_writer.o build/libjpge.a build/test.o build/test build/stb_image.o build/photo_compressor.o build/photo_compressor
