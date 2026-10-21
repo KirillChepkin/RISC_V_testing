@@ -79,7 +79,7 @@ build/photo_compressor.o: src/photo_compressor.cpp jpg/jpge.h
 build/photo_compressor: build/photo_compressor.o build/stb_image.o build/libjpge.a
 	g++ build/photo_compressor.o build/stb_image.o -Lbuild -ljpge -o build/photo_compressor
 
-photo: build/photo_compressor
+comp_photo: build/photo_compressor
 	perf stat -e cycles ./build/photo_compressor
 # test for vector multiplication with intrinsics and without.
 build/intrinsics_test_vector:
