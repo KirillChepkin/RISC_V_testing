@@ -1,4 +1,4 @@
-#include "jpg/jpge.h"
+#include "../jpg/jpge/jpge.h"
 
 #include <algorithm>
 #include <cmath>
@@ -101,7 +101,7 @@ int main()
     jpge::params params;
     params.m_quality = 5;
     jpge::compress_image_to_jpeg_file(
-        "output/test_q5.jpeg",
+        "images/compressed/test_q5.jpeg",
         width,
         height,
         channels,
