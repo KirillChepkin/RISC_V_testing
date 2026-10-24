@@ -2,7 +2,17 @@
 
 namespace jpge {
 static const int YR=19595, YG=38470, YB=7471, CB_R=-11059, CB_G=-21709, CB_B=32768, CR_R=32768, CR_G=-27439, CR_B=-5329;
-static inline uint8 clamp(int i) { if (static_cast<uint>(i) > 255U) { if (i < 0) i = 0; else if (i > 255) i = 255; } return static_cast<uint8>(i); }
+static inline uint8 clamp(int i) {
+  if (static_cast<uint>(i) > 255U) {
+    if (i < 0) {
+      i = 0;
+    }
+    else if (i > 255) {
+      i = 255;
+    }
+  }
+  return static_cast<uint8>(i);
+}
 
 void RGB_to_YCC(uint8* pDst, const uint8 *pSrc, int num_pixels) {
   for ( ; num_pixels; pDst += 3, pSrc += 3, num_pixels--)
