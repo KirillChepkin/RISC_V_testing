@@ -15,8 +15,8 @@ $(BUILD_DIR)/jpge.o: jpge.cpp jpge.h jpge_internal_modules.h
 $(BUILD_DIR)/jpge_color_transform.o: jpge_color_transform.cpp jpge_color_transform.h jpge_internal_modules.h
 	g++ $(CXXFLAGS) -c jpge_color_transform.cpp -o $(BUILD_DIR)/jpge_color_transform.o
 
-$(BUILD_DIR)/jpge_forward_dct.o: jpge_forward_dct.cpp jpge_forward_dct.h jpge_internal_modules.h
-	g++ $(CXXFLAGS) -c jpge_forward_dct.cpp -o $(BUILD_DIR)/jpge_forward_dct.o
+$(BUILD_DIR)/jpge_forward_dct.o: forward_dct/jpge_forward_dct.cpp forward_dct/jpge_forward_dct.h jpge_internal_modules.h
+	g++ $(CXXFLAGS) -c forward_dct/jpge_forward_dct.cpp -o $(BUILD_DIR)/jpge_forward_dct.o
 
 $(BUILD_DIR)/jpge_huffman_tables.o: jpge_huffman_tables.cpp jpge_huffman_tables.h
 	g++ $(CXXFLAGS) -c jpge_huffman_tables.cpp -o $(BUILD_DIR)/jpge_huffman_tables.o
