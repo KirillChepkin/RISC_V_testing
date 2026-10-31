@@ -51,25 +51,67 @@ void memmul(uint32_t* a, uint32_t* b, size_t n) {
 
 #endif
 
+#define JPGE_MAX(a,b) (((a)>(b))?(a):(b))
+#define JPGE_MIN(a,b) (((a)<(b))?(a):(b))
+
+void compute_quant_table(int32_t *pDst, int16_t *pSrc, int32_t quality) {
+  int32_t q;
+  if (quality < 50) {
+    q = 5000 / quality;
+  }
+  else {
+    q = 200 - quality * 2;
+  }
+  #ifndef VECTOR
+  for (int i = 0; i < 64; i++) {
+    int32_t j = *pSrc;
+    pSrc++;
+    j = (j * q + 50L) / 100L;
+    *pDst = JPGE_MIN(JPGE_MAX(j, 1), 255);
+    pDst++;
+  }
+  #else
+  int32_t n = 64;
+  while (n > 0) {
+    riscv_t vl = __riscv_vsetvl_e32m8(n);
+    vint32m8 vector = __riscv_vle32_v_i32m8(pSrc, vl);
+    vector = __riscv_vmul_vx_i32m8(vector, q, vl);
+    vector = __riscv_vmax_vx_i32m8(p, 1, vl);
+    vector = __riscv_vmin_vx_i32m8(p, 255, vl);
+    __riscv_vse32_v_i32m8(pDst, vector, vl);
+    n -= vl;
+    pSrc += vl;
+    pDst += vl;
+  }
+  #endif
+}
+
 int main() {
   #ifdef VECTOR
-    printf("Compiling for riscv vector.");
-    printf("number of elements: %d\n", __riscv_vsetvl_e32m8(1024));
+    printf("Compiling for riscv vector.\n");
+    printf("number of 32-bit elements in one register: %d\n", __riscv_vsetvl_e32m1(1024));
   #else 
-    printf("Compiling for general riscv.");
+    printf("Compiling for general riscv.\n");
   #endif
 
-  uint32_t a[N] = {};
-  uint32_t b[N] = {};
-
-  for (uint32_t i = 0; i < N; i++) {
-    a[i] = i;
-    b[i] = 2;
-  }
-
-  memmul(a, b, N);
-  for (int i = 0; i < N; i++) {
-    printf("[%d]", b[i]);
+  static int16_t s_std_croma_quant[64] = {17,18,18,24,21,24,47,26,26,47,99,66,56,66,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99 };
+  int32_t table[64];
+  compute_quant_table(table, s_std_croma_quant, 50);
+  for (int i = 0; i < 64; i++) {
+    printf("%d ", i);
   }
   printf("\n");
+  // uint32_t a[N] = {};
+  // uint32_t b[N] = {};
+
+  // for (uint32_t i = 0; i < N; i++) {
+  //   a[i] = i;
+  //   b[i] = 2;
+  // }
+
+  // memmul(a, b, N);
+  // for (int i = 0; i < N; i++) {
+  //   printf("[%d]", b[i]);
+  // }
+  // printf("\n");
 }
