@@ -54,6 +54,7 @@ void memmul(uint32_t* a, uint32_t* b, size_t n) {
 int main() {
   #ifdef VECTOR
     printf("Compiling for riscv vector.");
+    printf("number of elements: %d\n", __riscv_vsetvl_e32m8(1024));
   #else 
     printf("Compiling for general riscv.");
   #endif
@@ -67,7 +68,6 @@ int main() {
   }
 
   memmul(a, b, N);
-  printf("number of elements: %d\n", __riscv_vsetvl_e32m8(1024));
   for (int i = 0; i < N; i++) {
     printf("[%d]", b[i]);
   }
