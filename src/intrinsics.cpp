@@ -54,7 +54,7 @@ void memmul(uint32_t* a, uint32_t* b, size_t n) {
 #define JPGE_MAX(a,b) (((a)>(b))?(a):(b))
 #define JPGE_MIN(a,b) (((a)<(b))?(a):(b))
 
-void compute_quant_table(int32_t *pDst, int16_t *pSrc, int32_t quality) {
+void compute_quant_table(int32_t *pDst, int32_t *pSrc, int32_t quality) {
   int32_t q;
   if (quality < 50) {
     q = 5000 / quality;
@@ -94,7 +94,7 @@ int main() {
     printf("Compiling for general riscv.\n");
   #endif
 
-  static int16_t s_std_croma_quant[64] = {17,18,18,24,21,24,47,26,26,47,99,66,56,66,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99 };
+  static int32_t s_std_croma_quant[64] = {17,18,18,24,21,24,47,26,26,47,99,66,56,66,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99 };
   int32_t table[64];
   compute_quant_table(table, s_std_croma_quant, 50);
   for (int i = 0; i < 64; i++) {
