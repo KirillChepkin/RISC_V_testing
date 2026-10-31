@@ -67,6 +67,7 @@ int main() {
   }
 
   memmul(a, b, N);
+  printf("number of elements: %d\n", __riscv_vsetvl_e32m8(1024));
   for (int i = 0; i < N; i++) {
     printf("[%d]", b[i]);
   }

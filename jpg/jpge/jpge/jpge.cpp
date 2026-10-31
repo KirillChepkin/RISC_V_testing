@@ -117,18 +117,23 @@ struct sym_freq { uint m_key, m_sym_index; };
 
 
 // Quantization table generation.
-void jpeg_encoder::compute_quant_table(int32 *pDst, int16 *pSrc)
-{
+void jpeg_encoder::compute_quant_table(int32 *pDst, int16 *pSrc) {
+  #ifndef VECTOR
   int32 q;
-  if (m_params.m_quality < 50)
+  if (m_params.m_quality < 50) {
     q = 5000 / m_params.m_quality;
-  else
+  }
+  else {
     q = 200 - m_params.m_quality * 2;
-  for (int i = 0; i < 64; i++)
-  {
-    int32 j = *pSrc++; j = (j * q + 50L) / 100L;
+  }
+  for (int i = 0; i < 64; i++) {
+    int32 j = *pSrc++;
+    j = (j * q + 50L) / 100L;
     *pDst++ = JPGE_MIN(JPGE_MAX(j, 1), 255);
   }
+  #else
+  
+  #endif
 }
 
 // Higher-level methods.
