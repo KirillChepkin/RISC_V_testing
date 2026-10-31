@@ -73,11 +73,11 @@ void compute_quant_table(int32_t *pDst, int16_t *pSrc, int32_t quality) {
   #else
   int32_t n = 64;
   while (n > 0) {
-    riscv_t vl = __riscv_vsetvl_e32m8(n);
-    vint32m8 vector = __riscv_vle32_v_i32m8(pSrc, vl);
+    int32_t vl = __riscv_vsetvl_e32m8(n);
+    vint32m8_t vector = __riscv_vle32_v_i32m8(pSrc, vl);
     vector = __riscv_vmul_vx_i32m8(vector, q, vl);
-    vector = __riscv_vmax_vx_i32m8(p, 1, vl);
-    vector = __riscv_vmin_vx_i32m8(p, 255, vl);
+    vector = __riscv_vmax_vx_i32m8(vector, 1, vl);
+    vector = __riscv_vmin_vx_i32m8(vector, 255, vl);
     __riscv_vse32_v_i32m8(pDst, vector, vl);
     n -= vl;
     pSrc += vl;
