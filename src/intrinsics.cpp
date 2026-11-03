@@ -67,10 +67,10 @@ void compute_quant_table(int32_t *pDst, int32_t *pSrc, int32_t quality) {
   for (int i = 0; i < 64; i++) {
     int32_t j = *pSrc;
     pSrc++;
-    printf("[%d %d %ld", j, q, (j * q + 50L) / 100L);
+    // printf("[%d %d %ld", j, q, (j * q + 50L) / 100L);
     j = (j * q + 50L) / 100L;
     *pDst = JPGE_MIN(JPGE_MAX(j, 1), 255);
-    printf(" %d]\n", *pDst);
+    // printf(" %d]\n", *pDst);
     pDst++;
   }
   #else
@@ -101,7 +101,7 @@ int main() {
   int32_t table[64];
   compute_quant_table(table, s_std_croma_quant, 50);
   for (int i = 0; i < 64; i++) {
-    printf("%d ", i);
+    printf("%d ", s_std_croma_quant[i]);
   }
   printf("\n");
 }
