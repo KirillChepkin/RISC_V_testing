@@ -70,7 +70,7 @@ void compute_quant_table(int32_t *pDst, int32_t *pSrc, int32_t quality) {
     printf("[%d %d %ld", j, q, (j * q + 50L) / 100L);
     j = (j * q + 50L) / 100L;
     *pDst = JPGE_MIN(JPGE_MAX(j, 1), 255);
-    printf(" %d]\n", pDst);
+    printf(" %d]\n", *pDst);
     pDst++;
   }
   #else
