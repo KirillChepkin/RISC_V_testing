@@ -67,9 +67,10 @@ void compute_quant_table(int32_t *pDst, int32_t *pSrc, int32_t quality) {
   for (int i = 0; i < 64; i++) {
     int32_t j = *pSrc;
     pSrc++;
-    printf("[%d %d %d]", j, q, (j * q + 50L) / 100L);
+    printf("[%d %d %ld", j, q, (j * q + 50L) / 100L);
     j = (j * q + 50L) / 100L;
     *pDst = JPGE_MIN(JPGE_MAX(j, 1), 255);
+    printf(" %d]\n", pDst);
     pDst++;
   }
   #else
@@ -91,7 +92,7 @@ void compute_quant_table(int32_t *pDst, int32_t *pSrc, int32_t quality) {
 int main() {
   #ifdef VECTOR
     printf("Compiling for riscv vector.\n");
-    printf("number of 32-bit elements in one register: %d\n", __riscv_vsetvl_e32m1(1024));
+    printf("number of 32-bit elements in one register: %lu\n", __riscv_vsetvl_e32m1(1024));
   #else 
     printf("Compiling for general riscv.\n");
   #endif
