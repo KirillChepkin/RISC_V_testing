@@ -101,7 +101,7 @@ int main() {
   int32_t table[64];
   compute_quant_table(table, s_std_croma_quant, 50);
   for (int i = 0; i < 64; i++) {
-    printf("%d ", s_std_croma_quant[i]);
+    printf("%d ", table[i]);
   }
   printf("\n");
 }
