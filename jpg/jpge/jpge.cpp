@@ -118,7 +118,6 @@ struct sym_freq { uint m_key, m_sym_index; };
 
 // Quantization table generation.
 void jpeg_encoder::compute_quant_table(int32 *pDst, int16 *pSrc) {
-  #ifndef VECTOR
   int32 q;
   if (m_params.m_quality < 50) {
     q = 5000 / m_params.m_quality;
@@ -131,9 +130,6 @@ void jpeg_encoder::compute_quant_table(int32 *pDst, int16 *pSrc) {
     j = (j * q + 50L) / 100L;
     *pDst++ = JPGE_MIN(JPGE_MAX(j, 1), 255);
   }
-  #else
-  
-  #endif
 }
 
 // Higher-level methods.
