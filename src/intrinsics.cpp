@@ -6,7 +6,6 @@
 #define N 1000
 
 #ifdef VECTOR
-
 #include <riscv_vector.h>
 
 void *memcpy_rvv(void* destination, const void* source, size_t n) {
@@ -62,10 +61,13 @@ void compute_quant_table(int32_t *pDst, int32_t *pSrc, int32_t quality) {
   else {
     q = 200 - quality * 2;
   }
+
+  
   #ifndef VECTOR
   for (int i = 0; i < 64; i++) {
     int32_t j = *pSrc;
     pSrc++;
+    printf("[%d %d %d]", j, q, (j * q + 50L) / 100L);
     j = (j * q + 50L) / 100L;
     *pDst = JPGE_MIN(JPGE_MAX(j, 1), 255);
     pDst++;
@@ -101,17 +103,4 @@ int main() {
     printf("%d ", i);
   }
   printf("\n");
-  // uint32_t a[N] = {};
-  // uint32_t b[N] = {};
-
-  // for (uint32_t i = 0; i < N; i++) {
-  //   a[i] = i;
-  //   b[i] = 2;
-  // }
-
-  // memmul(a, b, N);
-  // for (int i = 0; i < N; i++) {
-  //   printf("[%d]", b[i]);
-  // }
-  // printf("\n");
 }
