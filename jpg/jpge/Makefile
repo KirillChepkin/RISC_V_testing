@@ -9,9 +9,9 @@ OBJS = $(BUILD_DIR)/jpge.o $(BUILD_DIR)/jpge_color_transform.o $(BUILD_DIR)/jpge
 $(BUILD_DIR)/libjpge.a: $(OBJS)
 	ar rcs $(BUILD_DIR)/libjpge.a $(OBJS)
 
-$(BUILD_DIR)/jpge.o: # jpge.cpp jpge.h jpge_internal_modules.h
+$(BUILD_DIR)/jpge.o: jpge.cpp jpge.h jpge_internal_modules.h
 	$(MAKE) -C jpge
-# 	g++ $(CXXFLAGS) -c jpge.cpp -o $(BUILD_DIR)/jpge.o
+	g++ $(CXXFLAGS) -c jpge.cpp -o $(BUILD_DIR)/jpge.o
 
 $(BUILD_DIR)/jpge_color_transform.o: jpge_color_transform.cpp jpge_color_transform.h jpge_internal_modules.h
 	g++ $(CXXFLAGS) -c jpge_color_transform.cpp -o $(BUILD_DIR)/jpge_color_transform.o
