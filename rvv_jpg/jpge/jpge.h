@@ -7,7 +7,7 @@
 namespace rvv_jpge {
   class jpeg_encoder {
     public:
-      void rvv_jpeg_encoder::compute_quant_table(int32_t *pDst, int32_t *pSrc, int32_t quality);
+      void compute_quant_table(int32_t *pDst, int32_t *pSrc, int32_t quality);
   }
 }
 
