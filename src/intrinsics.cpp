@@ -50,7 +50,7 @@
 
 // #endif
 
-#include "rvv_jpg/jpge/jpge.cpp"
+#include "../rvv_jpg/jpge/jpge.cpp"
 
 int main() {
   #ifdef VECTOR
