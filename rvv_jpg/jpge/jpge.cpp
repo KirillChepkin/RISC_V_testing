@@ -2,7 +2,7 @@
 #include "jpge.h"
 
 namespace rvv_jpge {
-    void rvv_jpeg_encoder::compute_quant_table(int32_t *pDst, int32_t *pSrc, int32_t quality) {
+    void jpeg_encoder::compute_quant_table(int32_t *pDst, int32_t *pSrc, int32_t quality) {
         int32_t q;
         if (quality < 50) {
             q = 5000 / quality;
