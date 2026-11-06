@@ -1,4 +1,4 @@
-#include "../jpg/jpgd/jpgd.h"
+#include "jpgd.h"
 
 #include <iostream>
 

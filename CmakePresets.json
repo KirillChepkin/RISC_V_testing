@@ -1,0 +1,70 @@
+
+{
+    "version": 6,
+
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 25,
+        "patch": 0
+    },
+
+    "configurePresets": [
+        {
+            "name": "native",
+            "displayName": "Native Debug",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/native",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "ENABLE_RVV": "OFF",
+                "BUILD_REFERENCE": "ON",
+                "BUILD_RVV_JPG": "OFF",
+                "BUILD_EXAMPLES": "ON",
+                "BUILD_TESTS": "ON"
+            }
+        },
+        {
+            "name": "riscv",
+            "displayName": "RISC-V Release",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/riscv",
+            "toolchainFile": "${sourceDir}/cmake/riscv-toolchain.cmake",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "ENABLE_RVV": "ON",
+                "BUILD_REFERENCE": "ON",
+                "BUILD_RVV_JPG": "ON",
+                "BUILD_EXAMPLES": "ON",
+                "BUILD_TESTS": "ON"
+            }
+        }
+    ],
+
+    "buildPresets": [
+        {
+            "name": "native",
+            "configurePreset": "native"
+        },
+        {
+            "name": "riscv",
+            "configurePreset": "riscv"
+        }
+    ],
+
+    "testPresets": [
+        {
+            "name": "native",
+            "configurePreset": "native",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "riscv",
+            "configurePreset": "riscv",
+            "output": {
+                "outputOnFailure": true
+            }
+        }
+    ]
+}
