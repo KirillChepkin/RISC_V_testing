@@ -1,4 +1,4 @@
-#include "../jpg/jpge/jpge.h"
+#include "jpge.h"
 
 #include <iostream>
 

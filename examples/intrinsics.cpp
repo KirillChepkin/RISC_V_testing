@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <jpge.h>
 
 #define N 1000
 
@@ -49,8 +50,6 @@
 // }
 
 // #endif
-
-#include "../rvv_jpg/jpge/jpge.cpp"
 
 int main() {
   #ifdef VECTOR
