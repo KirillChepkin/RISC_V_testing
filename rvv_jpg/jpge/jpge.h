@@ -6,6 +6,8 @@
 
 namespace rvv_jpge {
   class jpeg_encoder {
+    private:
+      int32_t quant_table;
     public:
       void compute_quant_table(int32_t *pDst, int32_t *pSrc, int32_t quality);
   };
