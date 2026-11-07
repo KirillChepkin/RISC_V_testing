@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include <jpge.h>
 
 #define N 1000
 
@@ -52,18 +51,18 @@
 // #endif
 
 int main() {
+  static int32_t s_std_croma_quant[64] = {17,18,18,24,21,24,47,26,26,47,99,66,56,66,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99 };
+  int32_t table[64];
+
   #ifdef VECTOR
     printf("Compiling for riscv vector.\n");
     printf("number of 32-bit elements in one register: %lu\n", __riscv_vsetvl_e32m1(1024));
+    // rvv_jpge::jpeg_encoder* encoder = new rvv_jpge::jpeg_encoder();
+    // encoder -> compute_quant_table(table, s_std_croma_quant, 50);
+    // delete encoder;
   #else 
     printf("Compiling for general riscv.\n");
   #endif
-
-  static int32_t s_std_croma_quant[64] = {17,18,18,24,21,24,47,26,26,47,99,66,56,66,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99 };
-  int32_t table[64];
-  rvv_jpge::jpeg_encoder* encoder = new rvv_jpge::jpeg_encoder();
-  encoder -> compute_quant_table(table, s_std_croma_quant, 50);
-  delete encoder;
   for (int i = 0; i < 64; i++) {
     printf("%d ", table[i]);
   }
