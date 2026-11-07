@@ -1,4 +1,4 @@
-add_library(rvv_jpge STATIC,
+add_library(rvv_jpge STATIC
             src/jpge/jpge.cpp
 )
 
