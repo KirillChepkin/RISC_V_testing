@@ -59,14 +59,19 @@ target_compile_options(project_options INTERFACE
     -Wall
     -Wextra
 )
+add_library(rvv_options INTERFACE)
 
+if(ENABLE_RVV)
+    target_compile_options(project_options INTERFACE
+        -march=rv64gcv
+    )
+endif()
 
 # ============================================================
 # 4. Third-party libraries
 # ============================================================
 
-add_library(rvv_options INTERFACE)
-
+add_subdirectory(third_party/stb_image)
 
 # ============================================================
 # 5. JPEG implementations
