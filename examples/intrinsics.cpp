@@ -58,9 +58,9 @@ int main() {
     #include <riscv_vector.h>
     printf("Compiling for riscv vector.\n");
     printf("number of 32-bit elements in one register: %lu\n", __riscv_vsetvl_e32m1(1024));
-    rvv_jpge::jpeg_encoder* encoder = new rvv_jpge::jpeg_encoder();
-    encoder -> compute_quant_table(table, s_std_croma_quant, 50);
-    delete encoder;
+    // rvv_jpge::jpeg_encoder* encoder = new rvv_jpge::jpeg_encoder();
+    // encoder -> compute_quant_table(table, s_std_croma_quant, 50);
+    // delete encoder;
   #else 
     printf("Compiling for general riscv.\n");
   #endif
