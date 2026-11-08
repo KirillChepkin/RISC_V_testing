@@ -2,13 +2,17 @@ CXXFLAGS = -Wall -Wextra -O3 -std=gnu++20 -march=rv64gcv
 
 BUILD_DIR = build
 
-.PHONY: all clean jpge jpgd test comp_photo decomp_photo intrinsics intrinsics_assembly
+.PHONY: all clean jpge jpgd test jpg_tests comp_photo decomp_photo intrinsics intrinsics_assembly
 
 jpge:
 	$(MAKE) -C jpg/jpge
 
 jpgd:
 	$(MAKE) -C jpg/jpgd
+
+# Component unit tests (currently implemented for color transformation)
+jpg_tests:
+	$(MAKE) -C jpg_test test-all
 
 # stb_image
 $(BUILD_DIR)/stb_image.o: jpg/stb_image.c
