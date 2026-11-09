@@ -9,4 +9,4 @@ target_include_directories(rvv_jpge PUBLIC
 target_link_libraries(rvv_jpge PRIVATE
             project_options
             rvv_options
-)
+) 
