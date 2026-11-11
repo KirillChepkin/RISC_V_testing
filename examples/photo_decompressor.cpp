@@ -1,4 +1,4 @@
-#include "../jpg/jpge/jpge.h"
+#include "jpgd.h"
 
 #include <iostream>
 
@@ -15,13 +15,13 @@ extern "C" {
 
     const char* stbi_failure_reason(void);
 
-    void stbi_image_free(void* retval_from_stbi_load);
+    int stbi_write_tga(char const *filename, int x, int y, int comp, void *data);
 }
 
 int main() {
     std::string filename;
 
-    std::cout << "Enter input filename (from images/uncompressed/): ";
+    std::cout << "Enter input filename (from images/compressed/): ";
     std::getline(std::cin, filename);
 
     if (filename.empty()
@@ -32,18 +32,19 @@ int main() {
         return 1;
     }
 
-    const std::string input_path = "images/uncompressed/" + filename;
+    const std::string input_path = "images/compressed/" + filename;
 
     int width = 0;
     int height = 0;
     int original_components = 0;
+    int req_comp = 3;
 
     stbi_uc* image = stbi_load(
         input_path.c_str(),
         &width,
         &height,
         &original_components,
-        3
+        req_comp
     );
 
     if (image == nullptr) {
@@ -52,19 +53,10 @@ int main() {
         return 1;
     }
 
-    std::cout << "Image loaded successfully!\n";
+    std::cout << "Compressed image loaded successfully!\n";
     std::cout << "Width: " << width << '\n';
     std::cout << "Height: " << height << '\n';
 
-    int quality = 0;
-
-    std::cout << "Enter JPEG quality (1-100): ";
-
-    if (!(std::cin >> quality) || quality < 1 || quality > 100) {
-        std::cerr << "Invalid quality. Enter an integer from 1 to 100.\n";
-        stbi_image_free(image);
-        return 1;
-    }
 
     std::string base_name = filename;
     const std::string::size_type dot = base_name.find_last_of('.');
@@ -74,29 +66,18 @@ int main() {
     }
 
     const std::string output_path =
-        "images/compressed/" + base_name + "_q"
-        + std::to_string(quality) + ".jpeg";
+        "images/decompressed/" + base_name + ".tga";
 
-    jpge::params params;
-    params.m_quality = quality;
+    jpgd::uint8 *image_data = jpgd::decompress_jpeg_image_from_file(input_path.c_str(), &width, &height, &original_components, req_comp);
 
-    const bool success = jpge::compress_image_to_jpeg_file(
-        output_path.c_str(),
-        width,
-        height,
-        3,
-        image,
-        params
-    );
+    int res = stbi_write_tga(output_path.c_str(), width, height, req_comp, image_data);
 
-    stbi_image_free(image);
-
-    if (!success) {
-        std::cerr << "Failed to compress image.\n";
+    if (!res) {
+        std::cerr << "Failed to decompress image.\n";
         return 1;
     }
 
-    std::cout << "Image compressed successfully!\n";
+    std::cout << "Image decompressed successfully!\n";
     std::cout << "Output: " << output_path << '\n';
 
     return 0;
