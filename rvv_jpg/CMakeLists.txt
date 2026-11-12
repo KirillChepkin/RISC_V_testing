@@ -1,5 +1,6 @@
 add_library(rvv_jpge STATIC
             src/jpge/jpge.cpp
+            src/jpge/jpge_color_transform.cpp
 )
 
 target_include_directories(rvv_jpge PUBLIC 
