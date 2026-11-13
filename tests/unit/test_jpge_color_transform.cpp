@@ -57,7 +57,7 @@ void test_rgb_to_ycc() {
         std::vector<uint8> actual(count * 3), expected(count * 3);
         for (int i = 0; i < count; ++i)
             expected_ycc(c.src[i*3], c.src[i*3+1], c.src[i*3+2], &expected[i*3]);
-        jpge::RGB_to_YCC(actual.data(), c.src.data(), count);
+        rvv_jpge::RGB_to_YCC(actual.data(), c.src.data(), count);
         check(c.name, actual, expected);
     }
 }
@@ -81,7 +81,7 @@ void test_rgb_to_y() {
         std::vector<uint8> actual(count), expected(count);
         for (int i = 0; i < count; ++i)
             expected[i] = expected_y(c.src[i*3], c.src[i*3+1], c.src[i*3+2]);
-        jpge::RGB_to_Y(actual.data(), c.src.data(), count);
+        rvv_jpge::RGB_to_Y(actual.data(), c.src.data(), count);
         check(c.name, actual, expected);
     }
 }
@@ -105,7 +105,7 @@ void test_rgba_to_ycc() {
         std::vector<uint8> actual(count * 3), expected(count * 3);
         for (int i = 0; i < count; ++i)
             expected_ycc(c.src[i*4], c.src[i*4+1], c.src[i*4+2], &expected[i*3]);
-        jpge::RGBA_to_YCC(actual.data(), c.src.data(), count);
+        rvv_jpge::RGBA_to_YCC(actual.data(), c.src.data(), count);
         check(c.name, actual, expected);
     }
 }
@@ -129,7 +129,7 @@ void test_rgba_to_y() {
         std::vector<uint8> actual(count), expected(count);
         for (int i = 0; i < count; ++i)
             expected[i] = expected_y(c.src[i*4], c.src[i*4+1], c.src[i*4+2]);
-        jpge::RGBA_to_Y(actual.data(), c.src.data(), count);
+        rvv_jpge::RGBA_to_Y(actual.data(), c.src.data(), count);
         check(c.name, actual, expected);
     }
 }
@@ -156,7 +156,7 @@ void test_y_to_ycc() {
             expected[i*3+1] = 128;
             expected[i*3+2] = 128;
         }
-        jpge::Y_to_YCC(actual.data(), c.src.data(), count);
+        rvv_jpge::Y_to_YCC(actual.data(), c.src.data(), count);
         check(c.name, actual, expected);
     }
 }
