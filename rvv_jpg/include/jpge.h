@@ -4,13 +4,15 @@
 #ifndef JPEG_ENCODER_H
 #define JPEG_ENCODER_H
 
+
+using uint8  = std::uint8_t;
+using int16  = std::int16_t;
+using int32  = std::int32_t;
+using uint16 = std::uint16_t;
+using uint32 = std::uint32_t;
+using uint   = unsigned int;
+
 namespace rvv_jpge {
-  typedef unsigned char  uint8;
-  typedef signed short   int16;
-  typedef signed int     int32;
-  typedef unsigned short uint16;
-  typedef unsigned int   uint32;
-  typedef unsigned int   uint;
   
   class jpeg_encoder {
     private:

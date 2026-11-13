@@ -3,8 +3,6 @@
 #include <vector>
 #include "jpge_internal_modules.h"
 
-using jpge::uint8;
-
 namespace {
 int passed = 0;
 int failed = 0;
