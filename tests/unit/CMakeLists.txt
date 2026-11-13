@@ -5,4 +5,6 @@ add_executable(
 target_link_libraries(
     unit_tests PRIVATE
     rvv_jpge
+    # project_options
+    # rvv_options
 )
