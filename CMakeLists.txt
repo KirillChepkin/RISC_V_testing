@@ -62,7 +62,7 @@ target_compile_options(project_options INTERFACE
 add_library(rvv_options INTERFACE)
 
 if(ENABLE_RVV)
-    target_compile_options(project_options INTERFACE
+    target_compile_options(rvv_options INTERFACE
         -march=rv64gcv
     )
 endif()
