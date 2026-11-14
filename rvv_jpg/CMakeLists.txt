@@ -1,5 +1,8 @@
 add_library(rvv_jpge STATIC
-            src/jpge/jpge.cpp
+
+    src/jpge/jpge.cpp
+
+    src/jpge/jpge_forward_dct.cpp
 )
 
 target_include_directories(rvv_jpge PUBLIC 
