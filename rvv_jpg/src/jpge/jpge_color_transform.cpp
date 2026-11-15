@@ -74,16 +74,16 @@ namespace rvv_jpge {
 
             // convert to unsised 8bit int
             vuint32m4_t yu = __riscv_vreinterpret_u32m4(y);
-            vuint16m2_t y16 = __riscv_vnclipu_wx_u16m2(yu, 0, 0, vl);
-            vuint8m1_t y8 = __riscv_vnclipu_wx_u8m1(y16, 0, 0, vl);
+            vuint16m2_t y16 = __riscv_vnclipu_wx_u16m2(yu, 0, vl);
+            vuint8m1_t y8 = __riscv_vnclipu_wx_u8m1(y16, 0, vl);
 
             vuint32m4_t cbu = __riscv_vreinterpret_u32m4(cb);
-            vuint16m2_t cb16 = __riscv_vnclipu_wx_u16m2(cbu, 0, 0, vl);
-            vuint8m1_t cb8 = __riscv_vnclipu_wx_u8m1(cb16, 0, 0, vl);
+            vuint16m2_t cb16 = __riscv_vnclipu_wx_u16m2(cbu, 0, vl);
+            vuint8m1_t cb8 = __riscv_vnclipu_wx_u8m1(cb16, 0, vl);
 
             vuint32m4_t cru = __riscv_vreinterpret_u32m4(cr);
-            vuint16m2_t cr16 = __riscv_vnclipu_wx_u16m2(cru, 0, 0, vl);
-            vuint8m1_t cr8 = __riscv_vnclipu_wx_u8m1(cr16, 0, 0, vl);
+            vuint16m2_t cr16 = __riscv_vnclipu_wx_u16m2(cru, 0, vl);
+            vuint8m1_t cr8 = __riscv_vnclipu_wx_u8m1(cr16, 0, vl);
 
             // store from vector to distination array
             __riscv_vsse8_v_u8m1(pDst, 3, y8, vl);
@@ -124,8 +124,8 @@ namespace rvv_jpge {
 
             // convert to unsised 8bit int
             vuint32m4_t yu = __riscv_vreinterpret_u32m4(y);
-            vuint16m2_t y16 = __riscv_vnclipu_wx_u16m2(yu, 0, 0, vl);
-            vuint8m1_t y8 = __riscv_vnclipu_wx_u8m1(y16, 0, 0, vl);
+            vuint16m2_t y16 = __riscv_vnclipu_wx_u16m2(yu, 0, vl);
+            vuint8m1_t y8 = __riscv_vnclipu_wx_u8m1(y16, 0, vl);
             
             // store from vector to distination array
             __riscv_vsse8_v_u8m1(pDst, 3, y8, vl);
@@ -189,16 +189,16 @@ namespace rvv_jpge {
 
             // convert to unsised 8bit int
             vuint32m4_t yu = __riscv_vreinterpret_u32m4(y);
-            vuint16m2_t y16 = __riscv_vnclipu_wx_u16m2(yu, 0, 0, vl);
-            vuint8m1_t y8 = __riscv_vnclipu_wx_u8m1(y16, 0, 0, vl);
+            vuint16m2_t y16 = __riscv_vnclipu_wx_u16m2(yu, 0, vl);
+            vuint8m1_t y8 = __riscv_vnclipu_wx_u8m1(y16, 0, vl);
 
             vuint32m4_t cbu = __riscv_vreinterpret_u32m4(cb);
-            vuint16m2_t cb16 = __riscv_vnclipu_wx_u16m2(cbu, 0, 0, vl);
-            vuint8m1_t cb8 = __riscv_vnclipu_wx_u8m1(cb16, 0, 0, vl);
+            vuint16m2_t cb16 = __riscv_vnclipu_wx_u16m2(cbu, 0, vl);
+            vuint8m1_t cb8 = __riscv_vnclipu_wx_u8m1(cb16, 0, vl);
 
             vuint32m4_t cru = __riscv_vreinterpret_u32m4(cr);
-            vuint16m2_t cr16 = __riscv_vnclipu_wx_u16m2(cru, 0, 0, vl);
-            vuint8m1_t cr8 = __riscv_vnclipu_wx_u8m1(cr16, 0, 0, vl);
+            vuint16m2_t cr16 = __riscv_vnclipu_wx_u16m2(cru, 0, vl);
+            vuint8m1_t cr8 = __riscv_vnclipu_wx_u8m1(cr16, 0, vl);
 
             // store from vector to distination array
             __riscv_vsse8_v_u8m1(pDst, 3, y8, vl);
@@ -239,8 +239,8 @@ namespace rvv_jpge {
 
             // convert to unsised 8bit int
             vuint32m4_t yu = __riscv_vreinterpret_u32m4(y);
-            vuint16m2_t y16 = __riscv_vnclipu_wx_u16m2(yu, 0, 0, vl);
-            vuint8m1_t y8 = __riscv_vnclipu_wx_u8m1(y16, 0, 0, vl);
+            vuint16m2_t y16 = __riscv_vnclipu_wx_u16m2(yu, 0, vl);
+            vuint8m1_t y8 = __riscv_vnclipu_wx_u8m1(y16, 0, vl);
             
             // store from vector to distination array
             __riscv_vsse8_v_u8m1(pDst, 3, y8, vl);
