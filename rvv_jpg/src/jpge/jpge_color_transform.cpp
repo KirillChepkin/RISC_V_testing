@@ -1,6 +1,6 @@
 #include <riscv_vector.h>
 
-#include "../../include/jpge_color_transform.h"
+#include "jpge_color_transform.h"
 
 // In ideal mathematical representation
 // Y = 0.299R + 0.587G + 0.114B
