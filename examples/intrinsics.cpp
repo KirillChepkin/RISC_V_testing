@@ -51,10 +51,10 @@ int main() {
     __riscv_vse32_v_u32m4(dst, v32, vl);
 
     for (size_t i = 0; i < vl; ++i) {
-        std::printf("%u ", dst[i]);
+        printf("%u ", dst[i]);
     }
 
-    std::printf("\n");
+    printf("\n");
   #else 
     printf("Compiling for general riscv.\n");
   #endif
