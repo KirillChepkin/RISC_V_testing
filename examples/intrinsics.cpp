@@ -36,7 +36,6 @@ void memmul(uint32_t* a, uint32_t* b, size_t n) {
 int main() {
   static uint32_t s_std_croma_quant[64] = {17,18,18,24,21,24,47,26,26,47,99,66,56,66,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99 };
   uint32_t table[64] = {0};
-  memset(table, 2, 64);
 
   #ifdef VECTOR
     printf("Compiling for riscv vector.\n");
@@ -44,6 +43,9 @@ int main() {
   #else 
     printf("Compiling for general riscv.\n");
   #endif
+  for (size_t i = 0; i < 64; i++) {
+    table[i] = 2U;
+  }
   memmul(s_std_croma_quant, table, 64);
   for (int i = 0; i < 64; i++) {
     printf("%d ", table[i]);
