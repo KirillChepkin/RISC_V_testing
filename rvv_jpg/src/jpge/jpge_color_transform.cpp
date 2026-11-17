@@ -31,9 +31,17 @@ namespace rvv_jpge {
             vuint8m1_t g8 = __riscv_vlse8_v_u8m1(pSrc + 1, 3, vl);
             vuint8m1_t b8 = __riscv_vlse8_v_u8m1(pSrc + 2, 3, vl);
 
-            vuint32m4_t ru = __riscv_vzext_vf4_u32m4(r8, vl);
-            vuint32m4_t gu = __riscv_vzext_vf4_u32m4(g8, vl);
-            vuint32m4_t bu = __riscv_vzext_vf4_u32m4(b8, vl);
+            // Widen 8-bit values to 16-bit values.
+            vuint16m2_t r16 = __riscv_vwaddu_vx_u16m2(r8, 0, vl);
+            vuint16m2_t g16 = __riscv_vwaddu_vx_u16m2(g8, 0, vl);
+            vuint16m2_t b16 = __riscv_vwaddu_vx_u16m2(b8, 0, vl);
+
+            // Widen 16-bit values to 32-bit values.
+            // __riscv_vzext_vf4_u32m4 vector intrinsic compiled to the file that resulted in
+            // Illegal instruction error when executed.
+            vuint32m4_t ru = __riscv_vwaddu_vx_u32m4(r16, 0, vl);
+            vuint32m4_t gu = __riscv_vwaddu_vx_u32m4(g16, 0, vl);
+            vuint32m4_t bu = __riscv_vwaddu_vx_u32m4(b16, 0, vl);
 
             vint32m4_t r = __riscv_vreinterpret_i32m4(ru);
             vint32m4_t g = __riscv_vreinterpret_i32m4(gu);
@@ -105,9 +113,17 @@ namespace rvv_jpge {
             vuint8m1_t g8 = __riscv_vlse8_v_u8m1(pSrc + 1, 3, vl);
             vuint8m1_t b8 = __riscv_vlse8_v_u8m1(pSrc + 2, 3, vl);
 
-            vuint32m4_t ru = __riscv_vzext_vf4_u32m4(r8, vl);
-            vuint32m4_t gu = __riscv_vzext_vf4_u32m4(g8, vl);
-            vuint32m4_t bu = __riscv_vzext_vf4_u32m4(b8, vl);
+            // Widen 8-bit values to 16-bit values.
+            vuint16m2_t r16 = __riscv_vwaddu_vx_u16m2(r8, 0, vl);
+            vuint16m2_t g16 = __riscv_vwaddu_vx_u16m2(g8, 0, vl);
+            vuint16m2_t b16 = __riscv_vwaddu_vx_u16m2(b8, 0, vl);
+
+            // Widen 16-bit values to 32-bit values.
+            // __riscv_vzext_vf4_u32m4 vector intrinsic compiled to the file that resulted in
+            // Illegal instruction error when executed.
+            vuint32m4_t ru = __riscv_vwaddu_vx_u32m4(r16, 0, vl);
+            vuint32m4_t gu = __riscv_vwaddu_vx_u32m4(g16, 0, vl);
+            vuint32m4_t bu = __riscv_vwaddu_vx_u32m4(b16, 0, vl);
 
             vint32m4_t r = __riscv_vreinterpret_i32m4(ru);
             vint32m4_t g = __riscv_vreinterpret_i32m4(gu);
@@ -145,9 +161,17 @@ namespace rvv_jpge {
             vuint8m1_t g8 = __riscv_vlse8_v_u8m1(pSrc + 1, 3, vl);
             vuint8m1_t b8 = __riscv_vlse8_v_u8m1(pSrc + 2, 3, vl);
 
-            vuint32m4_t ru = __riscv_vzext_vf4_u32m4(r8, vl);
-            vuint32m4_t gu = __riscv_vzext_vf4_u32m4(g8, vl);
-            vuint32m4_t bu = __riscv_vzext_vf4_u32m4(b8, vl);
+            // Widen 8-bit values to 16-bit values.
+            vuint16m2_t r16 = __riscv_vwaddu_vx_u16m2(r8, 0, vl);
+            vuint16m2_t g16 = __riscv_vwaddu_vx_u16m2(g8, 0, vl);
+            vuint16m2_t b16 = __riscv_vwaddu_vx_u16m2(b8, 0, vl);
+
+            // Widen 16-bit values to 32-bit values.
+            // __riscv_vzext_vf4_u32m4 vector intrinsic compiled to the file that resulted in
+            // Illegal instruction error when executed.
+            vuint32m4_t ru = __riscv_vwaddu_vx_u32m4(r16, 0, vl);
+            vuint32m4_t gu = __riscv_vwaddu_vx_u32m4(g16, 0, vl);
+            vuint32m4_t bu = __riscv_vwaddu_vx_u32m4(b16, 0, vl);
 
             vint32m4_t r = __riscv_vreinterpret_i32m4(ru);
             vint32m4_t g = __riscv_vreinterpret_i32m4(gu);
@@ -220,9 +244,17 @@ namespace rvv_jpge {
             vuint8m1_t g8 = __riscv_vlse8_v_u8m1(pSrc + 1, 3, vl);
             vuint8m1_t b8 = __riscv_vlse8_v_u8m1(pSrc + 2, 3, vl);
 
-            vuint32m4_t ru = __riscv_vzext_vf4_u32m4(r8, vl);
-            vuint32m4_t gu = __riscv_vzext_vf4_u32m4(g8, vl);
-            vuint32m4_t bu = __riscv_vzext_vf4_u32m4(b8, vl);
+            // Widen 8-bit values to 16-bit values.
+            vuint16m2_t r16 = __riscv_vwaddu_vx_u16m2(r8, 0, vl);
+            vuint16m2_t g16 = __riscv_vwaddu_vx_u16m2(g8, 0, vl);
+            vuint16m2_t b16 = __riscv_vwaddu_vx_u16m2(b8, 0, vl);
+
+            // Widen 16-bit values to 32-bit values.
+            // __riscv_vzext_vf4_u32m4 vector intrinsic compiled to the file that resulted in
+            // Illegal instruction error when executed.
+            vuint32m4_t ru = __riscv_vwaddu_vx_u32m4(r16, 0, vl);
+            vuint32m4_t gu = __riscv_vwaddu_vx_u32m4(g16, 0, vl);
+            vuint32m4_t bu = __riscv_vwaddu_vx_u32m4(b16, 0, vl);
 
             vint32m4_t r = __riscv_vreinterpret_i32m4(ru);
             vint32m4_t g = __riscv_vreinterpret_i32m4(gu);
