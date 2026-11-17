@@ -40,6 +40,21 @@ int main() {
   #ifdef VECTOR
     printf("Compiling for riscv vector.\n");
     printf("number of 32-bit elements in one register: %lu\n", __riscv_vsetvl_e32m1(1024));
+    uint8_t src[8] = {1, 2, 3, 4, 5, 6, 7, 8};
+    uint32_t dst[8] = {};
+
+    size_t vl = __riscv_vsetvl_e8m1(8);
+
+    vuint8m1_t v8 = __riscv_vle8_v_u8m1(src, vl);
+    vuint32m4_t v32 = __riscv_vzext_vf4_u32m4(v8, vl);
+
+    __riscv_vse32_v_u32m4(dst, v32, vl);
+
+    for (size_t i = 0; i < vl; ++i) {
+        std::printf("%u ", dst[i]);
+    }
+
+    std::printf("\n");
   #else 
     printf("Compiling for general riscv.\n");
   #endif
