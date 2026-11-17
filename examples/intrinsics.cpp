@@ -40,10 +40,10 @@ int main() {
   #ifdef VECTOR
     printf("Compiling for riscv vector.\n");
     printf("number of 32-bit elements in one register: %lu\n", __riscv_vsetvl_e32m1(1024));
-    memmul(s_std_croma_quant, table, 64);
   #else 
     printf("Compiling for general riscv.\n");
   #endif
+  memmul(s_std_croma_quant, table, 64);
   for (int i = 0; i < 64; i++) {
     printf("%d ", table[i]);
   }
