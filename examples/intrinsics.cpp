@@ -46,8 +46,8 @@ int main() {
     size_t vl = __riscv_vsetvl_e8m1(8);
 
     vuint8m1_t v8 = __riscv_vle8_v_u8m1(src, vl);
-    vuint16m2_t v16 = __riscv_vwaddu_vx_u16m2(v8, 0, vl);
-    vuint32m4_t v32 = __riscv_vwaddu_vx_u32m4(v16, 0, vl);
+    // vuint16m2_t v16 = __riscv_vwaddu_vx_u16m2(v8, 0, vl);
+    vuint32m4_t v32 = __riscv_vzext_vf4_u32m4(v8, vl);
 
     __riscv_vse32_v_u32m4(dst, v32, vl);
 
