@@ -102,13 +102,13 @@ endif()
 if(BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
-    include(FetchContent)
+    # include(FetchContent)
 
-    FetchContent_Declare(
-        googletest
-        URL https://github.com/google/googletest/archive/refs/tags/v1.17.0.zip
-        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-    )
+    # FetchContent_Declare(
+    #     googletest
+    #     URL https://github.com/google/googletest/archive/refs/tags/v1.17.0.zip
+    #     DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+    # )
 
-    FetchContent_MakeAvailable(googletest)
+    # FetchContent_MakeAvailable(googletest)
 endif()
