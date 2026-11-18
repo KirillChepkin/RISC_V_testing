@@ -23,7 +23,7 @@
 namespace rvv_jpge {
     volatile unsigned int zero = 0;
 
-    
+
     void RGB_to_YCC(uint8* pDst, const uint8 *pSrc, int num_pixels) {
         while (num_pixels > 0) {
             size_t vl = __riscv_vsetvl_e8m1(num_pixels);
@@ -136,6 +136,10 @@ namespace rvv_jpge {
             vuint32m4_t ru = __riscv_vwaddu_vx_u32m4(r16, zero, vl);
             vuint32m4_t gu = __riscv_vwaddu_vx_u32m4(g16, zero, vl);
             vuint32m4_t bu = __riscv_vwaddu_vx_u32m4(b16, zero, vl);
+
+            vint32m4_t r = __riscv_vreinterpret_i32m4(ru);
+            vint32m4_t g = __riscv_vreinterpret_i32m4(gu);
+            vint32m4_t b = __riscv_vreinterpret_i32m4(bu);
 
             // calculate Y
             // Y = 0.299R + 0.587G + 0.114B
