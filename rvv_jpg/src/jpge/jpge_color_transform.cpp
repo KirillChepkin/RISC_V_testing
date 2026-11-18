@@ -21,7 +21,9 @@
 #define CR_B -5329 // 5329/65536 approximately equals 0.081312
 
 namespace rvv_jpge {
+    volatile unsigned int zero = 0;
 
+    
     void RGB_to_YCC(uint8* pDst, const uint8 *pSrc, int num_pixels) {
         while (num_pixels > 0) {
             size_t vl = __riscv_vsetvl_e8m1(num_pixels);
@@ -32,16 +34,27 @@ namespace rvv_jpge {
             vuint8m1_t b8 = __riscv_vlse8_v_u8m1(pSrc + 2, 3, vl);
 
             // Widen 8-bit values to 16-bit values.
-            vuint16m2_t r16 = __riscv_vwaddu_vx_u16m2(r8, 0, vl);
-            vuint16m2_t g16 = __riscv_vwaddu_vx_u16m2(g8, 0, vl);
-            vuint16m2_t b16 = __riscv_vwaddu_vx_u16m2(b8, 0, vl);
+            // vuint16m2_t r16 = __riscv_vwaddu_vx_u16m2(r8, 0, vl);
+            // vuint16m2_t g16 = __riscv_vwaddu_vx_u16m2(g8, 0, vl);
+            // vuint16m2_t b16 = __riscv_vwaddu_vx_u16m2(b8, 0, vl);
 
             // Widen 16-bit values to 32-bit values.
             // __riscv_vzext_vf4_u32m4 vector intrinsic compiled to the file that resulted in
             // Illegal instruction error when executed.
-            vuint32m4_t ru = __riscv_vwaddu_vx_u32m4(r16, 0, vl);
-            vuint32m4_t gu = __riscv_vwaddu_vx_u32m4(g16, 0, vl);
-            vuint32m4_t bu = __riscv_vwaddu_vx_u32m4(b16, 0, vl);
+            // vuint32m4_t ru = __riscv_vwaddu_vx_u32m4(r16, 0, vl);
+            // vuint32m4_t gu = __riscv_vwaddu_vx_u32m4(g16, 0, vl);
+            // vuint32m4_t bu = __riscv_vwaddu_vx_u32m4(b16, 0, vl);
+
+            // The solution of the Illegal instruction issue that uses volatile constant addition.
+            // Widen 8-bit values to 16-bit values.
+            vuint16m2_t r16 = __riscv_vwaddu_vx_u16m2(r8, zero, vl);
+            vuint16m2_t g16 = __riscv_vwaddu_vx_u16m2(g8, zero, vl);
+            vuint16m2_t b16 = __riscv_vwaddu_vx_u16m2(b8, zero, vl);
+
+            // Widen 16-bit values to 32-bit values.
+            vuint32m4_t ru = __riscv_vwaddu_vx_u32m4(r16, zero, vl);
+            vuint32m4_t gu = __riscv_vwaddu_vx_u32m4(g16, zero, vl);
+            vuint32m4_t bu = __riscv_vwaddu_vx_u32m4(b16, zero, vl);
 
             vint32m4_t r = __riscv_vreinterpret_i32m4(ru);
             vint32m4_t g = __riscv_vreinterpret_i32m4(gu);
@@ -113,21 +126,16 @@ namespace rvv_jpge {
             vuint8m1_t g8 = __riscv_vlse8_v_u8m1(pSrc + 1, 3, vl);
             vuint8m1_t b8 = __riscv_vlse8_v_u8m1(pSrc + 2, 3, vl);
 
+            // The solution of the Illegal instruction issue that uses volatile constant addition.
             // Widen 8-bit values to 16-bit values.
-            vuint16m2_t r16 = __riscv_vwaddu_vx_u16m2(r8, 0, vl);
-            vuint16m2_t g16 = __riscv_vwaddu_vx_u16m2(g8, 0, vl);
-            vuint16m2_t b16 = __riscv_vwaddu_vx_u16m2(b8, 0, vl);
+            vuint16m2_t r16 = __riscv_vwaddu_vx_u16m2(r8, zero, vl);
+            vuint16m2_t g16 = __riscv_vwaddu_vx_u16m2(g8, zero, vl);
+            vuint16m2_t b16 = __riscv_vwaddu_vx_u16m2(b8, zero, vl);
 
             // Widen 16-bit values to 32-bit values.
-            // __riscv_vzext_vf4_u32m4 vector intrinsic compiled to the file that resulted in
-            // Illegal instruction error when executed.
-            vuint32m4_t ru = __riscv_vwaddu_vx_u32m4(r16, 0, vl);
-            vuint32m4_t gu = __riscv_vwaddu_vx_u32m4(g16, 0, vl);
-            vuint32m4_t bu = __riscv_vwaddu_vx_u32m4(b16, 0, vl);
-
-            vint32m4_t r = __riscv_vreinterpret_i32m4(ru);
-            vint32m4_t g = __riscv_vreinterpret_i32m4(gu);
-            vint32m4_t b = __riscv_vreinterpret_i32m4(bu);
+            vuint32m4_t ru = __riscv_vwaddu_vx_u32m4(r16, zero, vl);
+            vuint32m4_t gu = __riscv_vwaddu_vx_u32m4(g16, zero, vl);
+            vuint32m4_t bu = __riscv_vwaddu_vx_u32m4(b16, zero, vl);
 
             // calculate Y
             // Y = 0.299R + 0.587G + 0.114B
@@ -161,17 +169,16 @@ namespace rvv_jpge {
             vuint8m1_t g8 = __riscv_vlse8_v_u8m1(pSrc + 1, 3, vl);
             vuint8m1_t b8 = __riscv_vlse8_v_u8m1(pSrc + 2, 3, vl);
 
+            // The solution of the Illegal instruction issue that uses volatile constant addition.
             // Widen 8-bit values to 16-bit values.
-            vuint16m2_t r16 = __riscv_vwaddu_vx_u16m2(r8, 0, vl);
-            vuint16m2_t g16 = __riscv_vwaddu_vx_u16m2(g8, 0, vl);
-            vuint16m2_t b16 = __riscv_vwaddu_vx_u16m2(b8, 0, vl);
+            vuint16m2_t r16 = __riscv_vwaddu_vx_u16m2(r8, zero, vl);
+            vuint16m2_t g16 = __riscv_vwaddu_vx_u16m2(g8, zero, vl);
+            vuint16m2_t b16 = __riscv_vwaddu_vx_u16m2(b8, zero, vl);
 
             // Widen 16-bit values to 32-bit values.
-            // __riscv_vzext_vf4_u32m4 vector intrinsic compiled to the file that resulted in
-            // Illegal instruction error when executed.
-            vuint32m4_t ru = __riscv_vwaddu_vx_u32m4(r16, 0, vl);
-            vuint32m4_t gu = __riscv_vwaddu_vx_u32m4(g16, 0, vl);
-            vuint32m4_t bu = __riscv_vwaddu_vx_u32m4(b16, 0, vl);
+            vuint32m4_t ru = __riscv_vwaddu_vx_u32m4(r16, zero, vl);
+            vuint32m4_t gu = __riscv_vwaddu_vx_u32m4(g16, zero, vl);
+            vuint32m4_t bu = __riscv_vwaddu_vx_u32m4(b16, zero, vl);
 
             vint32m4_t r = __riscv_vreinterpret_i32m4(ru);
             vint32m4_t g = __riscv_vreinterpret_i32m4(gu);
@@ -244,17 +251,16 @@ namespace rvv_jpge {
             vuint8m1_t g8 = __riscv_vlse8_v_u8m1(pSrc + 1, 3, vl);
             vuint8m1_t b8 = __riscv_vlse8_v_u8m1(pSrc + 2, 3, vl);
 
+            // The solution of the Illegal instruction issue that uses volatile constant addition.
             // Widen 8-bit values to 16-bit values.
-            vuint16m2_t r16 = __riscv_vwaddu_vx_u16m2(r8, 0, vl);
-            vuint16m2_t g16 = __riscv_vwaddu_vx_u16m2(g8, 0, vl);
-            vuint16m2_t b16 = __riscv_vwaddu_vx_u16m2(b8, 0, vl);
+            vuint16m2_t r16 = __riscv_vwaddu_vx_u16m2(r8, zero, vl);
+            vuint16m2_t g16 = __riscv_vwaddu_vx_u16m2(g8, zero, vl);
+            vuint16m2_t b16 = __riscv_vwaddu_vx_u16m2(b8, zero, vl);
 
             // Widen 16-bit values to 32-bit values.
-            // __riscv_vzext_vf4_u32m4 vector intrinsic compiled to the file that resulted in
-            // Illegal instruction error when executed.
-            vuint32m4_t ru = __riscv_vwaddu_vx_u32m4(r16, 0, vl);
-            vuint32m4_t gu = __riscv_vwaddu_vx_u32m4(g16, 0, vl);
-            vuint32m4_t bu = __riscv_vwaddu_vx_u32m4(b16, 0, vl);
+            vuint32m4_t ru = __riscv_vwaddu_vx_u32m4(r16, zero, vl);
+            vuint32m4_t gu = __riscv_vwaddu_vx_u32m4(g16, zero, vl);
+            vuint32m4_t bu = __riscv_vwaddu_vx_u32m4(b16, zero, vl);
 
             vint32m4_t r = __riscv_vreinterpret_i32m4(ru);
             vint32m4_t g = __riscv_vreinterpret_i32m4(gu);
