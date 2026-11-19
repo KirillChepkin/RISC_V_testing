@@ -1,14 +1,12 @@
-class output_stream
-  {
+class output_stream {
   public:
     virtual ~output_stream() { };
     virtual bool put_buf(const void* Pbuf, int len) = 0;
     template<class T> inline bool put_obj(const T& obj) { return put_buf(&obj, sizeof(T)); }
   };
-    
+    s
   // Lower level jpeg_encoder class - useful if more control is needed than the above helper functions.
-  class jpeg_encoder
-  {
+  class jpeg_encoder {
   public:
     jpeg_encoder();
     ~jpeg_encoder();
