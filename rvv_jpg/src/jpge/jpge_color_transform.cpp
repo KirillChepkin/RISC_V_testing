@@ -131,7 +131,7 @@ namespace rvv_jpge {
         
         // Widen 8-bit values to 16-bit values.
         vuint16mf2_t r16 = __riscv_vwaddu_vx_u16mf2(r8mf4, zero, vl);
-        vuint16mf2_t g16 = __riscv_vwaddu_vx_u16mf2(r8mf4, zero, vl);
+        vuint16mf2_t g16 = __riscv_vwaddu_vx_u16mf2(g8mf4, zero, vl);
         vuint16mf2_t b16 = __riscv_vwaddu_vx_u16mf2(b8mf4, zero, vl);
 
         // Widen 16-bit values to 32-bit values.
@@ -252,7 +252,7 @@ namespace rvv_jpge {
         
         // Widen 8-bit values to 16-bit values.
         vuint16mf2_t r16 = __riscv_vwaddu_vx_u16mf2(r8mf4, zero, vl);
-        vuint16mf2_t g16 = __riscv_vwaddu_vx_u16mf2(r8mf4, zero, vl);
+        vuint16mf2_t g16 = __riscv_vwaddu_vx_u16mf2(g8mf4, zero, vl);
         vuint16mf2_t b16 = __riscv_vwaddu_vx_u16mf2(b8mf4, zero, vl);
 
         // Widen 16-bit values to 32-bit values.
