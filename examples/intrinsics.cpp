@@ -55,7 +55,7 @@ int main() {
 
 
     vuint16m2_t v16 =  __riscv_vzext_vf2_u16m2(v8, vl);
-    vuint32m4_t v32 =  __riscv_vzext_vf2_u16m2(v8, vl);
+    vuint32m4_t v32 =  __riscv_vzext_vf2_u32m2(v8, vl);
 
     __riscv_vse32_v_u32m4(dst, v32, vl);
 
