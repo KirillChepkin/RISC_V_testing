@@ -83,6 +83,7 @@ endif()
 
 if(BUILD_RVV_JPG)
     add_subdirectory(rvv_jpg)
+    add_subdirectory(scratch/vanya)
 endif()
 
 

@@ -40,6 +40,7 @@ namespace rvv_jpge {
 
             // problem - extra registers are allocated to store sliding result
             // problem reported
+            // solution: __riscv_vslideup_vx_i32m1_tu
             vuint8m1_t r_shifted = __riscv_vslidedown_vx_u8m1(r_group, offset, pixels);
             vuint8m1_t g_shifted = __riscv_vslidedown_vx_u8m1(g_group, offset, pixels);
             vuint8m1_t b_shifted = __riscv_vslidedown_vx_u8m1(b_group, offset, pixels);
@@ -52,7 +53,7 @@ namespace rvv_jpge {
             
             // Widen 8-bit values to 16-bit values.
             // problem - widening-with-addition operation forbids reusing the register
-            // problem unreported
+            // problem unreported because there is no obvious solution
             vuint16mf2_t r16 = __riscv_vwaddu_vx_u16mf2(r8mf4, zero, vl);
             vuint16mf2_t g16 = __riscv_vwaddu_vx_u16mf2(g8mf4, zero, vl);
             vuint16mf2_t b16 = __riscv_vwaddu_vx_u16mf2(b8mf4, zero, vl);
@@ -100,6 +101,10 @@ namespace rvv_jpge {
             cr = __riscv_vmin_vx_i32m1(cr, 255, vl);
 
             // convert to unsised 8bit int
+            // problem - shortening operations take extra registers
+            // problem unreported because this registers will likely be the reused registers from widening.
+            // registers used for widening are also a problem but as long as it is impossible to solve, this
+            // problem is not a problem.
             vuint32m1_t yu = __riscv_vreinterpret_u32m1(y);
             vuint16mf2_t y16 = __riscv_vnclipu_wx_u16mf2(yu, 0, vl);
             vuint8mf4_t y8 = __riscv_vnclipu_wx_u8mf4(y16, 0, vl);
@@ -112,7 +117,7 @@ namespace rvv_jpge {
             vuint16mf2_t cr16 = __riscv_vnclipu_wx_u16mf2(cru, 0, vl);
             vuint8mf4_t cr8 = __riscv_vnclipu_wx_u8mf4(cr16, 0, vl);
 
-            // Extand lmul
+            // Extend lmul
             vuint8m1_t y8m1 = __riscv_vlmul_ext_v_u8mf4_u8m1(y8);
             vuint8m1_t cb8m1 = __riscv_vlmul_ext_v_u8mf4_u8m1(cb8);
             vuint8m1_t cr8m1 = __riscv_vlmul_ext_v_u8mf4_u8m1(cr8);
