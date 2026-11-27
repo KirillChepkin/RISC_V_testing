@@ -18,7 +18,12 @@ namespace rvv_jpge {
     private:
     public:
       void compute_quant_table(int32 *pDst, int32 *pSrc, int32 quality);
-  };
+      void convert_RGB_block_to_YCC(
+        vuint8m1_t r_group, vuint8m1_t g_group, vuint8m1_t b_group,
+        vuint8m1_t *y_group, vuint8m1_t *cb_group, vuint8m1_t *cr_group);
+      void convert_RGB_block_to_Y(vuint8m1_t r_group, vuint8m1_t g_group, vuint8m1_t b_group, vuint8m1_t *y_group);
+      void convert_Y_block_to_YCC(vuint8m1_t y_in_group, vuint8m1_t *y_out_group, vuint8m1_t *cb_group, vuint8m1_t *cr_group);
+      };
 }
 
 #endif

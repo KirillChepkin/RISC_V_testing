@@ -23,7 +23,6 @@
 namespace rvv_jpge {
     volatile unsigned int zero = 0;
 
-
     void RGB_to_YCC(uint8* pDst, const uint8 *pSrc, int num_pixels) {
         while (num_pixels > 0) {
             size_t vl = __riscv_vsetvl_e8m1(num_pixels);
