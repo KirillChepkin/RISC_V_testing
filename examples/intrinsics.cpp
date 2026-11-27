@@ -50,8 +50,12 @@ int main() {
     // vuint32m4_t v32 = __riscv_vzext_vf4_u32m4(v8, vl);
 
     volatile unsigned int zero = 0;
-    vuint16m2_t v16 = __riscv_vwaddu_vx_u16m2(v8, zero, vl);
-    vuint32m4_t v32 = __riscv_vwaddu_vx_u32m4(v16, zero, vl);
+    // vuint16m2_t v16 = __riscv_vwaddu_vx_u16m2(v8, zero, vl);
+    // vuint32m4_t v32 = __riscv_vwaddu_vx_u32m4(v16, zero, vl);
+
+
+    vuint16m2_t v16 =  __riscv_vzext_vf2_u16m2(v8, vl);
+    vuint32m4_t v32 =  __riscv_vzext_vf2_u16m2(v8, vl);
 
     __riscv_vse32_v_u32m4(dst, v32, vl);
 

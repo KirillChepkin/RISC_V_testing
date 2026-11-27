@@ -38,16 +38,21 @@ namespace rvv_jpge {
         for (size_t part = 0; part < 4; part++) {
             const size_t offset = part * vl;
 
+            // problem - extra registers are allocated to store sliding result
+            // problem reported
             vuint8m1_t r_shifted = __riscv_vslidedown_vx_u8m1(r_group, offset, pixels);
             vuint8m1_t g_shifted = __riscv_vslidedown_vx_u8m1(g_group, offset, pixels);
             vuint8m1_t b_shifted = __riscv_vslidedown_vx_u8m1(b_group, offset, pixels);
 
             // Truncate lmul from 1 to 1/4
+            // no problem
             vuint8mf4_t r8mf4 = __riscv_vlmul_trunc_v_u8m1_u8mf4(r_shifted);
             vuint8mf4_t g8mf4 = __riscv_vlmul_trunc_v_u8m1_u8mf4(g_shifted);
             vuint8mf4_t b8mf4 = __riscv_vlmul_trunc_v_u8m1_u8mf4(b_shifted);
             
             // Widen 8-bit values to 16-bit values.
+            // problem - widening-with-addition operation forbids reusing the register
+            // problem unreported
             vuint16mf2_t r16 = __riscv_vwaddu_vx_u16mf2(r8mf4, zero, vl);
             vuint16mf2_t g16 = __riscv_vwaddu_vx_u16mf2(g8mf4, zero, vl);
             vuint16mf2_t b16 = __riscv_vwaddu_vx_u16mf2(b8mf4, zero, vl);
